@@ -10,10 +10,6 @@ cat << EOM >> /etc/pacman.conf
 [archlinuxcn]
 Server = https://repo.archlinuxcn.org/x86_64
 
-[arch4edu]
-SigLevel = Never
-Server = https://mirrors.tuna.tsinghua.edu.cn/arch4edu/$arch
-
 [lightquantum]
 SigLevel = Never
 Server = https://repo.lightquantum.me
@@ -29,7 +25,8 @@ Server = https://dl.lwqwq.com/repo/$arch
 EOM
 
 pacman-key --init
-pacman -Sy --noconfirm && pacman -S --noconfirm archlinuxcn-keyring
+pacman -Syu --noconfirm
+pacman -S --noconfirm archlinuxcn-keyring
 pacman -S --noconfirm yay
 
 sudo --set-home -u builder yay -S --noconfirm --builddir=./ "$pkgname"
