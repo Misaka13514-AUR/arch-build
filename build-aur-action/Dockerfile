@@ -6,7 +6,7 @@ RUN date
 WORKDIR /tmp
 COPY pacman.conf.add ./
 
-RUN cat /etc/pacman.conf ./pacman.conf.add > /etc/pacman.conf
+RUN cat ./pacman.conf.add >> /etc/pacman.conf
 
 
 RUN pacman-key --init
