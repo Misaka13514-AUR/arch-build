@@ -10,10 +10,6 @@ cat << EOM >> /etc/pacman.conf
 [archlinuxcn]
 Server = https://repo.archlinuxcn.org/x86_64
 
-[lightquantum]
-SigLevel = Never
-Server = https://repo.lightquantum.me
-
 [zhullyb]
 SigLevel = Never
 Server = https://mirror.zhullyb.top
