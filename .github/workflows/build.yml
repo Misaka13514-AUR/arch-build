@@ -18,13 +18,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: ./build-aur-action
+      - uses: Clansty/build-aur-action@master
         with:
           repo-name: ${{ matrix.repos }}
 
       - id: pkgname
         working-directory: ${{ matrix.repos }}
-        run: echo ::set-output name=pkgname::$(ls *-x86_64.pkg.*)
+        run: echo ::set-output name=pkgname::$(ls *-*.pkg.tar.*)
 
       - name: deploy file
         uses: wlixcc/SFTP-Deploy-Action@v1.0
@@ -35,11 +35,6 @@ jobs:
           local_path: ${{ matrix.repos }}/${{ steps.pkgname.outputs.pkgname }}
           remote_path: '/home/repo-builder/tmp'
 
-      - uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          tag: "packages"
-          artifacts: "./*/*.zst"
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
+
+      - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/queue
