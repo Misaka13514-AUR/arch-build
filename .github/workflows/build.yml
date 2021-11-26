@@ -9,82 +9,37 @@ jobs:
   buildAUR:
     strategy:
       matrix:
-        repos: [osu-lazer, mpv-mpris, weechat-notify-send, fpp, redsocks, drill, k6, redis-desktop-manager, git-cola, python-ffmpeg, python-fqdn, python-pprintpp, makedeb]
+        repos: [pycharm-professional, deepin-wine-wechat, yesplaymusic, yesplaymusic-electron, discord_arch_electron, osu-lazer]
 
       fail-fast: false
       
     runs-on: ubuntu-latest
     
-    steps:
-    - uses: actions/checkout@v2
-    
-    - uses: ./build-aur-action
-      with:
-        repo-name: ${{ matrix.repos }}
-    
-    - uses: actions/upload-artifact@v2
-      with:
-        path: ./*/*.pkg.tar.zst
-        name: ${{ matrix.repos }}
-        
-    - uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        tag: "packages"
-        artifacts: "./*/*.zst"
-        token: ${{ secrets.GITHUB_TOKEN }}
-
-  buildNonAUR:
-    strategy:
-      matrix:
-        PKGBUILDs: [breeze10]
-
-      fail-fast: false
-      
-    runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build Non-AUR packages
-        id: makepkg
-        uses: edlanglois/pkgbuild-action@v1
+      - uses: ./build-aur-action
         with:
-          pkgdir: ${{ matrix.PKGBUILDs }}
-          aurDeps: true
-          
-      - uses: actions/upload-artifact@v2
+          repo-name: ${{ matrix.repos }}
+
+      - id: pkgname
+        working-directory: ${{ matrix.repos }}
+        run: echo ::set-output name=pkgname::$(ls *-x86_64.pkg.*)
+
+      - name: deploy file
+        uses: wlixcc/SFTP-Deploy-Action@v1.0
         with:
-          path: ./*/*.pkg.tar.zst
-          name: ${{ matrix.PKGBUILDs }}
-      
+          username: 'repo-builder'
+          server: ${{ secrets.REPO_BUILDER_HOST }}
+          ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
+          local_path: ${{ matrix.repos }}/${{ steps.pkgname.outputs.pkgname }}
+          remote_path: '/home/repo-builder/tmp'
+
       - uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           tag: "packages"
-          artifacts: ${{ steps.makepkg.outputs.pkgfile0 }}
+          artifacts: "./*/*.zst"
           token: ${{ secrets.GITHUB_TOKEN }}
-          
-  uploadToOneDrive:      
-    runs-on: ubuntu-latest
-    if: always()
-    needs: [buildAUR, buildNonAUR]
 
-    steps:
-      - uses: actions/checkout@v2
-      
-      - uses: actions/download-artifact@v2
-        id: download
-      
-      - uses: ./create-db-and-upload-action
-        with:
-          RCLONE_ONEDRIVE_CLIENT_ID: ${{ secrets.RCLONE_ONEDRIVE_CLIENT_ID }}
-          RCLONE_ONEDRIVE_CLIENT_SECRET: ${{ secrets.RCLONE_ONEDRIVE_CLIENT_SECRET }}
-          RCLONE_ONEDRIVE_REGION: global
-          RCLONE_ONEDRIVE_TOKEN: ${{ secrets.RCLONE_ONEDRIVE_TOKEN }}
-          RCLONE_ONEDRIVE_DRIVE_ID: ${{ secrets.RCLONE_ONEDRIVE_DRIVE_ID }}
-          RCLONE_ONEDRIVE_DRIVE_TYPE: personal
-          dest_path: /archrepo
-          repo_name: vifly
-          gpg-privatekey: ${{ secrets.gpg_private_key }}
-          local_path: ${{ steps.download.outputs.download-path }}
+      - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
