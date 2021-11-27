@@ -10,7 +10,18 @@ jobs:
   buildAUR:
     strategy:
       matrix:
-        repos: [pycharm-professional, deepin-wine-wechat, yesplaymusic, yesplaymusic-electron, discord_arch_electron, osu-lazer]
+        repos:
+          - pycharm-professional
+          - deepin-wine-wechat
+          - yesplaymusic
+          - yesplaymusic-electron
+          - discord_arch_electron
+          - osu-lazer
+          - visual-paradigm-community
+          - finalshell
+          - rdm-bin
+          - realvnc-vnc-viewer
+          - realvnc-vnc-server
 
       fail-fast: false
       
