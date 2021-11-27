@@ -3,7 +3,7 @@ name: BUILD
 on:
   push:
   schedule:
-    - cron:  '1 20 * * *'
+    - cron:  '1 */8 * * *'
   workflow_dispatch:
 
 jobs:
@@ -22,6 +22,12 @@ jobs:
           - rdm-bin
           - realvnc-vnc-viewer
           - realvnc-vnc-server
+          - clash-for-windows-bin
+          - cosbrowser
+          - slack-electron
+          - jadx-gui-desktop
+          - mkinitcpio-transflag
+          - cydia-impactor
 
       fail-fast: false
       
@@ -44,6 +50,10 @@ jobs:
         if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
         with:
           repo-name: ${{ matrix.repos }}
+
+      - name: make it fail if the package cannot be found
+        run: ls *-*.pkg.tar.*
+        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
 
       - id: pkgname
         if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
