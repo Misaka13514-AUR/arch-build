@@ -51,9 +51,9 @@ jobs:
         with:
           repo-name: ${{ matrix.repos }}
 
-      - name: make it fail if the package cannot be found
-        run: ls *-*.pkg.tar.*
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
+      #- name: make it fail if the package cannot be found
+        #run: ls *-*.pkg.tar.*
+        #if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
 
       - id: pkgname
         if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
