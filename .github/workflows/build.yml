@@ -16,17 +16,35 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v2
+      - name: download PKGBUILD
+        run: wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=${{ matrix.repos }} -O PKGBUILD
+
+      - name: determine if this package need to be built
+        id: isNeed
+        # 这里判断不是特别准确，因为只判断了 x86_64，没有 any 的情况。下面还需要判断一次
+        run: |
+          source PKGBUILD
+          fileName=$pkgname-$pkgver-$pkgrel-x86_64.pkg.tar.zst
+          echo $fileName
+          echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/$fileName)
 
       - uses: Clansty/build-aur-action@master
+        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
         with:
           repo-name: ${{ matrix.repos }}
 
       - id: pkgname
+        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
         working-directory: ${{ matrix.repos }}
         run: echo ::set-output name=pkgname::$(ls *-*.pkg.tar.*)
 
+      - name: determine if this package need to be uploaded
+        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
+        id: isNeed2
+        run: echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/${{ steps.pkgname.outputs.pkgname }})
+
       - name: deploy file
+        if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
         uses: wlixcc/SFTP-Deploy-Action@v1.0
         with:
           username: 'repo-builder'
@@ -36,5 +54,6 @@ jobs:
           remote_path: '/home/repo-builder/tmp'
 
       - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
+        if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
 
       - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/queue
