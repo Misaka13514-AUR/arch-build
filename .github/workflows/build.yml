@@ -91,6 +91,10 @@ jobs:
           - electron13-bin
           - visual-studio-code-bin
           - yay-bin
+          - webstorm
+          - intellij-idea-ultimate-edition
+          - pycharm-professional
+          - visual-paradigm-community
 
       fail-fast: false
 
@@ -104,6 +108,9 @@ jobs:
         id: isNeed
         run: |
           source PKGBUILD
+          echo ::set-output name=pkgname::$pkgname
+          echo ::set-output name=pkgver::$pkgver
+          echo ::set-output name=pkgrel::$pkgrel
           fileName=$pkgname-$pkgver-$pkgrel-aarch64.pkg.tar.zst
           echo $fileName
           echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/$fileName)
@@ -120,7 +127,8 @@ jobs:
       - id: pkgname
         if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
         working-directory: ${{ matrix.repos }}
-        run: echo ::set-output name=pkgname::$(ls *-*.pkg.tar.*)
+        # 防止一个 pkgbase 两个包引起问题
+        run: echo ::set-output name=pkgname::$(ls ${{ steps.isNeed.outputs.pkgname }}-${{ steps.isNeed.outputs.pkgver }}-${{ steps.isNeed.outputs.pkgrel }}-*.pkg.tar.*)
 
       - name: determine if this package need to be uploaded
         if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
