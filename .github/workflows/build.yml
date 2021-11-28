@@ -28,6 +28,7 @@ jobs:
           - jadx-gui-desktop
           - mkinitcpio-transflag
           - cydia-impactor
+          - typora-free
 
       fail-fast: false
       
