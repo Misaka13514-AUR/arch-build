@@ -29,6 +29,7 @@ jobs:
           - mkinitcpio-transflag
           - cydia-impactor
           - typora-free
+          - rider
 
       fail-fast: false
       
