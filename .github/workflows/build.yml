@@ -74,11 +74,11 @@ jobs:
         if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
         uses: wlixcc/SFTP-Deploy-Action@v1.0
         with:
-          username: 'repo-builder'
+          username: 'repobuilder'
           server: ${{ secrets.REPO_BUILDER_HOST }}
           ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
           local_path: ${{ matrix.repos }}/${{ steps.pkgname.outputs.pkgname }}
-          remote_path: '/home/repo-builder/tmp'
+          remote_path: '/home/repobuilder/tmp'
 
       - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
         if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
@@ -143,11 +143,11 @@ jobs:
         if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
         uses: wlixcc/SFTP-Deploy-Action@v1.0
         with:
-          username: 'repo-builder'
+          username: 'repobuilder'
           server: ${{ secrets.REPO_BUILDER_HOST }}
           ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
           local_path: ${{ matrix.repos }}/${{ steps.pkgname.outputs.pkgname }}
-          remote_path: '/home/repo-builder/tmp'
+          remote_path: '/home/repobuilder/tmp'
 
       - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
         if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
