@@ -30,6 +30,9 @@ jobs:
           - cydia-impactor
           - typora-free
           - rider
+          - ttf-twemoji
+          - ttf-twemoji-color
+          - microsoft-edge-beta-bin
 
       fail-fast: false
       
