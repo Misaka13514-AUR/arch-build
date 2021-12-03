@@ -18,6 +18,7 @@ jobs:
           - discord_arch_electron
           - osu-lazer
           - visual-paradigm-community
+          - visual-paradigm
           - finalshell
           - rdm-bin
           - realvnc-vnc-viewer
