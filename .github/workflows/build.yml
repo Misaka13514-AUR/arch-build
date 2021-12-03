@@ -33,6 +33,20 @@ jobs:
           - ttf-twemoji
           - ttf-twemoji-color
           - microsoft-edge-beta-bin
+          - ffmpeg-full
+          - chromaprint-fftw
+          - davs2
+          - flite1-patched
+          - libklvanc
+          - libopenmpt
+          - librist
+          - shine
+          - uavs3d
+          - vo-amrwbenc
+          - xavs
+          - xavs2
+          - rockchip-mpp
+          - lensfun-git
 
       fail-fast: false
       
