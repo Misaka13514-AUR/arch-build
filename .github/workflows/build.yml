@@ -39,7 +39,7 @@ jobs:
           - davs2
           - flite1-patched
           - libklvanc
-          - libopenmpt
+          - libopenmpt-svn
           - librist
           - shine
           - uavs3d
