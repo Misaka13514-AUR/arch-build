@@ -38,7 +38,7 @@ jobs:
           - chromaprint-fftw
           - davs2
           - flite1-patched
-          - libklvanc
+          - libklvanc-git
           - libopenmpt
           - librist
           - shine
