@@ -48,6 +48,10 @@ jobs:
           - xavs2
           - rockchip-mpp
           - lensfun-git
+          - wrapland-kwinft
+          - disman-kwinft
+          - kdisplay-kwinft
+          - kwinft
 
       fail-fast: false
       
