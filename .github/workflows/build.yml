@@ -52,6 +52,7 @@ jobs:
           - disman-kwinft
           - kdisplay-kwinft
           - kwinft
+          - uavs3d-git
 
       fail-fast: false
       
