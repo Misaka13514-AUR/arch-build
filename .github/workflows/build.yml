@@ -53,6 +53,7 @@ jobs:
           - kdisplay-kwinft
           - kwinft
           - uavs3d-git
+          - openssl-static
 
       fail-fast: false
       
