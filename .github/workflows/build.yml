@@ -56,7 +56,7 @@ jobs:
           - openssl-static
           - howdy
           - trustedqsl
-          - wxgdk2.8
+          - wxgtk2.8
           - hamradio-menus
 
       fail-fast: false
