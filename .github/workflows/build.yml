@@ -55,6 +55,9 @@ jobs:
           - uavs3d-git
           - openssl-static
           - howdy
+          - trustedqsl
+          - wxgdk2.8
+          - hamradio-menus
 
       fail-fast: false
       
