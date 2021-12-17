@@ -54,6 +54,7 @@ jobs:
           - kwinft
           - uavs3d-git
           - openssl-static
+          - howdy
 
       fail-fast: false
       
