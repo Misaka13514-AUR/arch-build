@@ -54,7 +54,7 @@ jobs:
           - kwinft
           - uavs3d-git
           - openssl-static
-          - howd
+          - howdy
           - trustedqsl
           - wxgtk2.8
           - hamradio-menus
