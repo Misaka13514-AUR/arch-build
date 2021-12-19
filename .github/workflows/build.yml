@@ -61,6 +61,8 @@ jobs:
           - pam-python
           - python-face_recognition_models
           - python-face_recognition
+          - guacamole-server
+          - guacamole-client
 
       fail-fast: false
       
