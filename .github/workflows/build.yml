@@ -63,6 +63,7 @@ jobs:
           - python-face_recognition
           - guacamole-server
           - guacamole-client
+          - uuid
 
       fail-fast: false
       
