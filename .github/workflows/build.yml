@@ -64,6 +64,7 @@ jobs:
           - guacamole-server
           - guacamole-client
           - uuid
+          - aria2-systemd
 
       fail-fast: false
       
