@@ -65,6 +65,9 @@ jobs:
           - guacamole-client
           - uuid
           - aria2-systemd
+          - deepin-wine6-stable
+          - deepin-wine6-stable-amd64
+          - deepin-wine6-stable-i386
 
       fail-fast: false
       
