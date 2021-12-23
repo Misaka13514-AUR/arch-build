@@ -66,8 +66,6 @@ jobs:
           - uuid
           - aria2-systemd
           - deepin-wine6-stable
-          - deepin-wine6-stable-amd64
-          - deepin-wine6-stable-i386
           - nvidia-prime-select-git
           - pocketsphinx
           - deepin-wine5
@@ -142,23 +140,20 @@ jobs:
     
     steps:
       - uses: Clansty/build-aur-action@master
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
         with:
           repo-name: ${{ matrix.repos }}
 
       - id: pkgname
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
         working-directory: ${{ matrix.repos }}
         # 防止一个 pkgbase 两个包引起问题
         run: echo ::set-output name=pkgname::$(ls ${{ matrix.repos }}-*.pkg.tar.*)
 
       - name: determine if this package need to be uploaded
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
         id: isNeed2
         run: echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/${{ steps.pkgname.outputs.pkgname }})
 
       - name: deploy file
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
+        if: ${{ steps.isNeed2.outputs.isNeed == 'false' }}
         uses: wlixcc/SFTP-Deploy-Action@v1.0
         with:
           username: 'repobuilder'
@@ -168,7 +163,7 @@ jobs:
           remote_path: '/home/repobuilder/repo-builder/tmp'
 
       - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
+        if: ${{ steps.isNeed2.outputs.isNeed == 'false' }}
 
       - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/queue
 
