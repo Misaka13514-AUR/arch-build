@@ -69,6 +69,7 @@ jobs:
           - deepin-wine6-stable-amd64
           - deepin-wine6-stable-i386
           - nvidia-prime-select-git
+          - pocketsphinx
 
       fail-fast: false
       
