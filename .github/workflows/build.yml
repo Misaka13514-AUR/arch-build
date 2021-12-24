@@ -158,7 +158,7 @@ jobs:
           username: 'repobuilder'
           server: ${{ secrets.REPO_BUILDER_HOST }}
           ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
-          local_path: ${{ matrix.repos }}/${{ steps.pkgname.outputs.pkgname }}
+          local_path: deepin-wine6-stable/${{ steps.pkgname.outputs.pkgname }}
           remote_path: '/home/repobuilder/repo-builder/tmp'
 
       - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
