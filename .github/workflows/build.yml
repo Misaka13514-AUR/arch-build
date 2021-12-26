@@ -75,6 +75,7 @@ jobs:
           - nvidia-utils-nvlax
           - ctcontainer
           - nvidia-470xx-utils
+          - layan-cursor-theme-git
 
       fail-fast: false
       
