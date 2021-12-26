@@ -71,6 +71,9 @@ jobs:
           - deepin-wine5
           - deepin-wine5-helper
           - smallpdf-desktop
+          - altserver
+          - nvidia-utils-nvlax
+          - ctcontainer
 
       fail-fast: false
       
