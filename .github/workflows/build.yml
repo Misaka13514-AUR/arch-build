@@ -71,9 +71,10 @@ jobs:
           - deepin-wine5
           - deepin-wine5-helper
           - smallpdf-desktop
-          - altserver
+          - altserver-bin
           - nvidia-utils-nvlax
           - ctcontainer
+          - nvidia-470xx-utils
 
       fail-fast: false
       
@@ -138,9 +139,9 @@ jobs:
           - deepin-wine6-stable-i386
 
       fail-fast: false
-      
+
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: Clansty/build-aur-action@master
         with:
@@ -162,6 +163,43 @@ jobs:
           server: ${{ secrets.REPO_BUILDER_HOST }}
           ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
           local_path: deepin-wine6-stable/${{ steps.pkgname.outputs.pkgname }}
+          remote_path: '/home/repobuilder/repo-builder/tmp'
+
+      - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
+        if: ${{ steps.isNeed2.outputs.isNeed == 'false' }}
+
+  buildAUR-nvidia-470xx-utils:
+    strategy:
+      matrix:
+        repos:
+          - opencl-nvidia-470xx
+          - nvidia-470xx-dkms
+
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: Clansty/build-aur-action@master
+        with:
+          repo-name: ${{ matrix.repos }}
+
+      - id: pkgname
+        working-directory: nvidia-470xx-utils
+        run: echo ::set-output name=pkgname::$(ls ${{ matrix.repos }}-*.pkg.tar.*)
+
+      - name: determine if this package need to be uploaded
+        id: isNeed2
+        run: echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/${{ steps.pkgname.outputs.pkgname }})
+
+      - name: deploy file
+        if: ${{ steps.isNeed2.outputs.isNeed == 'false' }}
+        uses: wlixcc/SFTP-Deploy-Action@v1.0
+        with:
+          username: 'repobuilder'
+          server: ${{ secrets.REPO_BUILDER_HOST }}
+          ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
+          local_path: nvidia-470xx-utils/${{ steps.pkgname.outputs.pkgname }}
           remote_path: '/home/repobuilder/repo-builder/tmp'
 
       - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
