@@ -76,6 +76,7 @@ jobs:
           - ctcontainer
           - nvidia-470xx-utils
           - layan-cursor-theme-git
+          - dduper-bin
 
       fail-fast: false
       
