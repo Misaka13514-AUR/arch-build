@@ -78,6 +78,7 @@ jobs:
           - layan-cursor-theme-git
           - dduper-bin
           - bedup
+          - feishu
 
       fail-fast: false
       
