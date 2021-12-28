@@ -86,6 +86,14 @@ jobs:
           - mongodb-tools-bin
           - redis-desktop-manager
           - visual-studio-code-bin
+          - balena-etcher
+          - aliyunpan-liupan1890
+          - baidunetdisk-electron
+          - wechat-uos
+          - wemeet-bin
+          - wps-office
+          - wps-office-mime
+          - wps-office-mui-zh-cn
 
       fail-fast: false
       
