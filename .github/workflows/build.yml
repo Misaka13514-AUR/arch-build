@@ -79,6 +79,13 @@ jobs:
           - dduper-bin
           - bedup
           - feishu
+          - code-server
+          - google-chrome
+          - mongodb-bin
+          - mongodb-compass
+          - mongodb-tools-bin
+          - redis-desktop-manager
+          - visual-studio-code-bin
 
       fail-fast: false
       
