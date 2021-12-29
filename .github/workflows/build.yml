@@ -94,7 +94,7 @@ jobs:
           - wps-office
           - wps-office-mime
           - wps-office-mui-zh-cn
-          - ncmdump
+          - ncmdump-go
 
       fail-fast: false
       
