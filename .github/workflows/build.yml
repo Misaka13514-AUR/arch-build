@@ -94,8 +94,9 @@ jobs:
           - wps-office
           - wps-office-mime
           - wps-office-mui-zh-cn
-          - ncmdump-go
           - musikcube
+          - sway-launcher-desktop
+          - noto-color-emoji-fontconfig
 
       fail-fast: false
       
