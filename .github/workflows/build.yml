@@ -98,6 +98,8 @@ jobs:
           - sway-launcher-desktop
           - noto-color-emoji-fontconfig
           - kwin-bismuth
+          - linux-xanmod-tt-uksm-cjktty
+          - linux-xanmod-tt-uksm-cjktty-headers
 
       fail-fast: false
       
