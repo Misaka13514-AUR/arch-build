@@ -97,6 +97,7 @@ jobs:
           - musikcube
           - sway-launcher-desktop
           - noto-color-emoji-fontconfig
+          - kwin-bismuth
 
       fail-fast: false
       
