@@ -101,6 +101,8 @@ jobs:
           - linux-xanmod-tt-uksm-cjktty
           - linux-xanmod-tt-uksm-cjktty-headers
           - miredo
+          - cloudflare-wrangler
+          - marktext
 
       fail-fast: false
       
