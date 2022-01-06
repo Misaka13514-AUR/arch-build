@@ -30,6 +30,8 @@ jobs:
         repos: ${{ fromJSON(needs.pkglist.outputs.data).x86_64 }}
       fail-fast: false
     steps:
+      - uses: actions/checkout@v1
+
       - name: 检查包是否已存在
         uses: ./check-is-needed
 
