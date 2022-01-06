@@ -25,7 +25,7 @@ runs:
       shell: bash
       run: |
         mkdir pkgdb
-        wget https://archlinux.blob.core.windows.net/repo/Clansty.db.tar.gz && tar -xzf Clansty.db.tar.gz -C pkgdb || echo '仓库数据库不存在'
+        wget https://archlinux.blob.core.windows.net/repo/${{ inputs.arch }}/Clansty.db.tar.gz && tar -xzf Clansty.db.tar.gz -C pkgdb || echo '仓库数据库不存在'
 
     - name: 获取包名称
       shell: bash
