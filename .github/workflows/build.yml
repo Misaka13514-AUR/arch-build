@@ -21,7 +21,7 @@ jobs:
           from: 'yaml'
           to: 'json'
 
-  打包AUR-x86_64:
+  buildAUR-x86_64:
     runs-on: ubuntu-latest
     needs:
      - pkglist
