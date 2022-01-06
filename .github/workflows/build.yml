@@ -34,6 +34,9 @@ jobs:
 
       - name: 检查包是否已存在
         uses: ./check-is-needed
+        with: 
+          package-name: ${{ matrix.repos }}
+          arch: x86_64
 
   #     - uses: Clansty/build-aur-action@master
   #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
