@@ -18,16 +18,17 @@ runs:
     - uses: actions/setup-node@v2.3.0
 
     - name: 下载 PKGBUILD
+      shell: bash
       run: wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=${{ inputs.package-name }} -O PKGBUILD
 
     - name: 下载并解压仓库数据库
-      continue-on-error: true
+      shell: bash
       run: |
         mkdir pkgdb
-        wget https://archlinux.blob.core.windows.net/repo/Clansty.db.tar.gz
-        tar -xzf Clansty.db.tar.gz -C pkgdb
+        wget https://archlinux.blob.core.windows.net/repo/Clansty.db.tar.gz && tar -xzf Clansty.db.tar.gz -C pkgdb || echo '仓库数据库不存在'
 
     - name: 获取包名称
+      shell: bash
       id: get-name
       run: |
         source PKGBUILD
@@ -37,6 +38,7 @@ runs:
         echo ::set-output name=epoch::$epoch
 
     - name: 检查数据库
+      shell: bash
       run: node ${{ github.action_path }}/check-db.js
       id: check-db
       env:
