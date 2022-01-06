@@ -2,201 +2,106 @@ name: BUILD
 
 on:
   push:
-  schedule:
-    - cron:  '1 */8 * * *'
+  # schedule:
+  #   - cron:  '1 */8 * * *'
   workflow_dispatch:
 
 jobs:
-  buildAUR:
+  # 读取 PKGLIST 文件并转换成 JSON 给下一步读取
+  pkglist:
+    runs-on: ubuntu-latest
+    outputs:
+      data: ${{ steps.yaml2json.outputs.data }}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: fabasoad/yaml-json-xml-converter-action@main
+        id: yaml2json
+        with:
+          path: 'pkglist.yaml'
+          from: 'yaml'
+          to: 'json'
+
+  buildAUR-x86_64:
+    runs-on: ubuntu-latest
+    needs:
+     - pkglist
     strategy:
       matrix:
-        repos:
-          - pycharm-professional
-          - deepin-wine-wechat
-          - yesplaymusic
-          - yesplaymusic-electron
-          - discord_arch_electron
-          - osu-lazer
-          - visual-paradigm-community
-          - visual-paradigm
-          - finalshell
-          - rdm-bin
-          - realvnc-vnc-viewer
-          - realvnc-vnc-server
-          - clash-for-windows-bin
-          - cosbrowser
-          - slack-electron
-          - jadx-gui-desktop
-          - mkinitcpio-transflag
-          - cydia-impactor
-          - typora-free
-          - rider
-          - ttf-twemoji
-          - ttf-twemoji-color
-          - microsoft-edge-beta-bin
-          - ffmpeg-full
-          - chromaprint-fftw
-          - davs2
-          - flite1-patched
-          - libklvanc-git
-          - libopenmpt-svn
-          - librist
-          - shine
-          - uavs3d
-          - vo-amrwbenc
-          - xavs
-          - xavs2
-          - rockchip-mpp
-          - lensfun-git
-          - wrapland-kwinft
-          - disman-kwinft
-          - kdisplay-kwinft
-          - kwinft
-          - uavs3d-git
-          - openssl-static
-          - howdy
-          - trustedqsl
-          - wxgtk2.8
-          - hamradio-menus
-          - pam-python
-          - python-face_recognition_models
-          - python-face_recognition
-          - guacamole-server
-          - guacamole-client
-          - uuid
-          - aria2-systemd
-          - deepin-wine6-stable
-          - nvidia-prime-select-git
-          - pocketsphinx
-          - deepin-wine5
-          - deepin-wine5-helper
-          - smallpdf-desktop
-          - altserver-bin
-          - nvidia-utils-nvlax
-          - ctcontainer
-          - nvidia-470xx-utils
-          - layan-cursor-theme-git
-          - dduper-bin
-          - bedup
-          - feishu
-          - code-server
-          - google-chrome
-          - mongodb-bin
-          - mongodb-compass
-          - mongodb-tools-bin
-          - redis-desktop-manager
-          - visual-studio-code-bin
-          - balena-etcher
-          - aliyunpan-liupan1890
-          - baidunetdisk-electron
-          - wechat-uos
-          - wemeet-bin
-          - wps-office
-          - wps-office-mime
-          - wps-office-mui-zh-cn
-          - musikcube
-          - sway-launcher-desktop
-          - noto-color-emoji-fontconfig
-          - kwin-bismuth
-          - linux-xanmod-tt-uksm-cjktty
-          - linux-xanmod-tt-uksm-cjktty-headers
-          - miredo
-          - cloudflare-wrangler
-          - marktext
-
+        repos: ${{ fromJSON(needs.pkglist.outputs.data).x86_64 }}
       fail-fast: false
-      
-    runs-on: ubuntu-latest
-    
     steps:
-      - name: download PKGBUILD
-        run: wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=${{ matrix.repos }} -O PKGBUILD
+      - name: 检查包是否已存在
+        uses: ./check-is-needed
 
-      - name: determine if this package need to be built
-        id: isNeed
-        # 这里判断不是特别准确，因为只判断了 x86_64，没有 any 的情况。下面还需要判断一次
-        run: |
-          source PKGBUILD
-          echo ::set-output name=pkgname::$pkgname
-          echo ::set-output name=pkgver::$pkgver
-          echo ::set-output name=pkgrel::$pkgrel
-          fileName=$pkgname-$pkgver-$pkgrel-x86_64.pkg.tar.zst
-          echo $fileName
-          echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/$fileName)
+  #     - uses: Clansty/build-aur-action@master
+  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
+  #       with:
+  #         repo-name: ${{ matrix.repos }}
 
-      - uses: Clansty/build-aur-action@master
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
-        with:
-          repo-name: ${{ matrix.repos }}
+  #     - id: pkgname
+  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
+  #       working-directory: ${{ matrix.repos }}
+  #       # 防止一个 pkgbase 两个包引起问题
+  #       run: echo ::set-output name=pkgname::$(ls ${{ steps.isNeed.outputs.pkgname }}-${{ steps.isNeed.outputs.pkgver }}-${{ steps.isNeed.outputs.pkgrel }}-*.pkg.tar.*)
 
-      #- name: make it fail if the package cannot be found
-        #run: ls *-*.pkg.tar.*
-        #if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
+  #     - name: determine if this package need to be uploaded
+  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
+  #       id: isNeed2
+  #       run: echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/${{ steps.pkgname.outputs.pkgname }})
 
-      - id: pkgname
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
-        working-directory: ${{ matrix.repos }}
-        # 防止一个 pkgbase 两个包引起问题
-        run: echo ::set-output name=pkgname::$(ls ${{ steps.isNeed.outputs.pkgname }}-${{ steps.isNeed.outputs.pkgver }}-${{ steps.isNeed.outputs.pkgrel }}-*.pkg.tar.*)
+  #     - name: deploy file
+  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
+  #       uses: wlixcc/SFTP-Deploy-Action@v1.0
+  #       with:
+  #         username: 'repobuilder'
+  #         server: ${{ secrets.REPO_BUILDER_HOST }}
+  #         ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
+  #         local_path: ${{ matrix.repos }}/${{ steps.pkgname.outputs.pkgname }}
+  #         remote_path: '/home/repobuilder/repo-builder/tmp'
 
-      - name: determine if this package need to be uploaded
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
-        id: isNeed2
-        run: echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/${{ steps.pkgname.outputs.pkgname }})
+  #     - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
+  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
 
-      - name: deploy file
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
-        uses: wlixcc/SFTP-Deploy-Action@v1.0
-        with:
-          username: 'repobuilder'
-          server: ${{ secrets.REPO_BUILDER_HOST }}
-          ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
-          local_path: ${{ matrix.repos }}/${{ steps.pkgname.outputs.pkgname }}
-          remote_path: '/home/repobuilder/repo-builder/tmp'
+  #     - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/queue
 
-      - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
+  # buildAUR-deepin-wine6-stable:
+  #   strategy:
+  #     matrix:
+  #       repos:
+  #         - deepin-wine6-stable-amd64
+  #         - deepin-wine6-stable-i386
 
-      - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/queue
+  #     fail-fast: false
 
-  buildAUR-deepin-wine6-stable:
-    strategy:
-      matrix:
-        repos:
-          - deepin-wine6-stable-amd64
-          - deepin-wine6-stable-i386
+  #   runs-on: ubuntu-latest
 
-      fail-fast: false
+  #   steps:
+  #     - uses: Clansty/build-aur-action@master
+  #       with:
+  #         repo-name: ${{ matrix.repos }}
 
-    runs-on: ubuntu-latest
+  #     - id: pkgname
+  #       working-directory: deepin-wine6-stable
+  #       run: echo ::set-output name=pkgname::$(ls ${{ matrix.repos }}-*.pkg.tar.*)
 
-    steps:
-      - uses: Clansty/build-aur-action@master
-        with:
-          repo-name: ${{ matrix.repos }}
+  #     - name: determine if this package need to be uploaded
+  #       id: isNeed2
+  #       run: echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/${{ steps.pkgname.outputs.pkgname }})
 
-      - id: pkgname
-        working-directory: deepin-wine6-stable
-        run: echo ::set-output name=pkgname::$(ls ${{ matrix.repos }}-*.pkg.tar.*)
+  #     - name: deploy file
+  #       if: ${{ steps.isNeed2.outputs.isNeed == 'false' }}
+  #       uses: wlixcc/SFTP-Deploy-Action@v1.0
+  #       with:
+  #         username: 'repobuilder'
+  #         server: ${{ secrets.REPO_BUILDER_HOST }}
+  #         ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
+  #         local_path: deepin-wine6-stable/${{ steps.pkgname.outputs.pkgname }}
+  #         remote_path: '/home/repobuilder/repo-builder/tmp'
 
-      - name: determine if this package need to be uploaded
-        id: isNeed2
-        run: echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/${{ steps.pkgname.outputs.pkgname }})
+  #     - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
+  #       if: ${{ steps.isNeed2.outputs.isNeed == 'false' }}
 
-      - name: deploy file
-        if: ${{ steps.isNeed2.outputs.isNeed == 'false' }}
-        uses: wlixcc/SFTP-Deploy-Action@v1.0
-        with:
-          username: 'repobuilder'
-          server: ${{ secrets.REPO_BUILDER_HOST }}
-          ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
-          local_path: deepin-wine6-stable/${{ steps.pkgname.outputs.pkgname }}
-          remote_path: '/home/repobuilder/repo-builder/tmp'
-
-      - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
-        if: ${{ steps.isNeed2.outputs.isNeed == 'false' }}
-
-  buildAUR-nvidia-470xx-utils:
+  # buildAUR-nvidia-470xx-utils:
     strategy:
       matrix:
         repos:
@@ -234,70 +139,70 @@ jobs:
         if: ${{ steps.isNeed2.outputs.isNeed == 'false' }}
 
   # 编译安装的包不能这么搞
-  buildAUR-aarch64:
-    strategy:
-      matrix:
-        repos:
-          - electron-bin
-          - electron12-bin
-          - electron13-bin
-          - visual-studio-code-bin
-          - yay-bin
-          - webstorm
-          - intellij-idea-ultimate-edition
-          - pycharm-professional
-          - visual-paradigm-community
+  # buildAUR-aarch64:
+  #   strategy:
+  #     matrix:
+  #       repos:
+  #         - electron-bin
+  #         - electron12-bin
+  #         - electron13-bin
+  #         - visual-studio-code-bin
+  #         - yay-bin
+  #         - webstorm
+  #         - intellij-idea-ultimate-edition
+  #         - pycharm-professional
+  #         - visual-paradigm-community
 
-      fail-fast: false
+  #     fail-fast: false
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: download PKGBUILD
-        run: wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=${{ matrix.repos }} -O PKGBUILD
+  #   steps:
+  #     - name: download PKGBUILD
+  #       run: wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=${{ matrix.repos }} -O PKGBUILD
 
-      - name: determine if this package need to be built
-        id: isNeed
-        run: |
-          source PKGBUILD
-          echo ::set-output name=pkgname::$pkgname
-          echo ::set-output name=pkgver::$pkgver
-          echo ::set-output name=pkgrel::$pkgrel
-          fileName=$pkgname-$pkgver-$pkgrel-aarch64.pkg.tar.zst
-          echo $fileName
-          echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/$fileName)
+  #     - name: determine if this package need to be built
+  #       id: isNeed
+  #       run: |
+  #         source PKGBUILD
+  #         echo ::set-output name=pkgname::$pkgname
+  #         echo ::set-output name=pkgver::$pkgver
+  #         echo ::set-output name=pkgrel::$pkgrel
+  #         fileName=$pkgname-$pkgver-$pkgrel-aarch64.pkg.tar.zst
+  #         echo $fileName
+  #         echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/$fileName)
 
-      - uses: Clansty/build-aur-action@aarch64
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
-        with:
-          repo-name: ${{ matrix.repos }}
+  #     - uses: Clansty/build-aur-action@aarch64
+  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
+  #       with:
+  #         repo-name: ${{ matrix.repos }}
 
-      #- name: make it fail if the package cannot be found
-        #run: ls *-*.pkg.tar.*
-        #if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
+  #     #- name: make it fail if the package cannot be found
+  #       #run: ls *-*.pkg.tar.*
+  #       #if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
 
-      - id: pkgname
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
-        working-directory: ${{ matrix.repos }}
-        # 防止一个 pkgbase 两个包引起问题
-        run: echo ::set-output name=pkgname::$(ls ${{ steps.isNeed.outputs.pkgname }}-${{ steps.isNeed.outputs.pkgver }}-${{ steps.isNeed.outputs.pkgrel }}-*.pkg.tar.*)
+  #     - id: pkgname
+  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
+  #       working-directory: ${{ matrix.repos }}
+  #       # 防止一个 pkgbase 两个包引起问题
+  #       run: echo ::set-output name=pkgname::$(ls ${{ steps.isNeed.outputs.pkgname }}-${{ steps.isNeed.outputs.pkgver }}-${{ steps.isNeed.outputs.pkgrel }}-*.pkg.tar.*)
 
-      - name: determine if this package need to be uploaded
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
-        id: isNeed2
-        run: echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/${{ steps.pkgname.outputs.pkgname }})
+  #     - name: determine if this package need to be uploaded
+  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
+  #       id: isNeed2
+  #       run: echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/${{ steps.pkgname.outputs.pkgname }})
 
-      - name: deploy file
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
-        uses: wlixcc/SFTP-Deploy-Action@v1.0
-        with:
-          username: 'repobuilder'
-          server: ${{ secrets.REPO_BUILDER_HOST }}
-          ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
-          local_path: ${{ matrix.repos }}/${{ steps.pkgname.outputs.pkgname }}
-          remote_path: '/home/repobuilder/repo-builder/tmp'
+  #     - name: deploy file
+  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
+  #       uses: wlixcc/SFTP-Deploy-Action@v1.0
+  #       with:
+  #         username: 'repobuilder'
+  #         server: ${{ secrets.REPO_BUILDER_HOST }}
+  #         ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
+  #         local_path: ${{ matrix.repos }}/${{ steps.pkgname.outputs.pkgname }}
+  #         remote_path: '/home/repobuilder/repo-builder/tmp'
 
-      - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
-        if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
+  #     - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
+  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
 
-      - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/queue
+  #     - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/queue

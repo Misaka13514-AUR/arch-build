@@ -1,0 +1,46 @@
+name: 检查包是否已存在
+inputs:
+  package-name:
+    required: true
+  arch:
+    description: 架构
+    required: true
+outputs:
+  is-needed:
+    description: true 或者 false 字符串
+    value: ${{ steps.check-db.outputs.is-needed }}
+  old-package-name:
+    description: 在包构建流程结束时需要删除的旧包名
+    value: ${{ steps.check-db.outputs.old-package-name }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v2.3.0
+
+    - name: 下载 PKGBUILD
+      run: wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=${{ inputs.package-name }} -O PKGBUILD
+
+    - name: 下载并解压仓库数据库
+      continue-on-error: true
+      run: |
+        mkdir pkgdb
+        wget https://archlinux.blob.core.windows.net/repo/Clansty.db.tar.gz
+        tar -xzf Clansty.db.tar.gz -C pkgdb
+
+    - name: 获取包名称
+      id: get-name
+      run: |
+        source PKGBUILD
+        echo ::set-output name=pkgname::$pkgname
+        echo ::set-output name=pkgver::$pkgver
+        echo ::set-output name=pkgrel::$pkgrel
+        echo ::set-output name=epoch::$epoch
+
+    - name: 检查数据库
+      run: node ${{ github.action_path }}/check-db.js
+      id: check-db
+      env:
+        PKGNAME: ${{ steps.get-name.outputs.pkgname }}
+        PKGVER: ${{ steps.get-name.outputs.pkgver }}
+        PKGREL: ${{ steps.get-name.outputs.pkgrel }}
+        EPOCH: ${{ steps.get-name.outputs.epoch }}
