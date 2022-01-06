@@ -7,7 +7,7 @@ console.log(`::notice::包名称: ${PKGNAME}
 目标版本: ${newVer}`)
 
 for (const subdir of subdirs) {
-    const content = fs.readfileSync(path.join('pkgdb', subdir, 'desc'), 'utf-8')
+    const content = fs.readFileSync(path.join('pkgdb', subdir, 'desc'), 'utf-8')
     const lines = content.split('\n')
     const indexOfBase = lines.indexOf('%BASE%')
     if (indexOfBase < 0) {
