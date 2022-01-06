@@ -1,0 +1,94 @@
+# Code credit to Menci
+# https://github.dev/Menci/aur.men.ci/blob/b046173011fdf89c669901d9d4985330b273c6e3/.github/actions/upload-and-commit-database/action.yaml
+
+name: Transactionally Commit Packages to Repo
+inputs:
+  azure-blob-storage-connection-string:
+    description: The connection string of Azure Blob Storage.
+    required: true
+  azure-blob-storage-container:
+    description: The container of Azure Blob Storage.
+    required: true
+  package-files:
+    required: true
+  arch:
+    required: true
+  is-any-arch-package:
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        echo "::group::Install pcregrep"
+        sudo apt-get update
+        sudo apt-get -y install pcregrep
+        echo "::endgroup::"
+
+        CACHE_CONTROL_DATABASE_FILE="no-cache"
+
+        ARCHES=(${{ inputs.arch }})
+        if [[ "${{ inputs.is-any-arch-package }}" == "true" ]]; then
+          ARCHES=(x86_64 i686 aarch64 loongarch64)
+        fi
+
+        for ARCH in $ARCHES; do
+          TRIES=0
+          while true; do
+            ((TRIES=TRIES+1))
+
+            echo "::group::Update repo database: ${TRIES}-th try"
+
+            TEMP_DB_FILE_DIRECTORY="$(mktemp -d -t db-file-XXXXXXXX)"
+            TEMP_DB_FILE="$TEMP_DB_FILE_DIRECTORY/Clansty.db.tar.gz"
+            TEMP_DB_FILE_DOT_FILES="$TEMP_DB_FILE_DIRECTORY/Clansty.files.tar.gz"
+
+            TARGET_PATH=${ARCH}/Clansty
+
+            echo "Downloading old database file"
+            EXISTS="$(az storage blob exists --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --name "$TARGET_PATH.db.tar.gz" | jq -r .exists)"
+            UPLOAD_CONDITION=()
+            if [[ "$EXISTS" == "true" ]]; then
+                ETAG="$(az storage blob download --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --file "$TEMP_DB_FILE" --name "$TARGET_PATH.db.tar.gz" | jq -r .properties.etag)"
+                if [[ "$ETAG" == "" ]]; then
+                    echo "Failed to download old database file!"
+                    exit 1
+                fi
+                UPLOAD_CONDITION+=('--if-match')
+                UPLOAD_CONDITION+=("$ETAG")
+            else
+                tar cvfJ "$TEMP_DB_FILE" --files-from=/dev/null
+                UPLOAD_CONDITION+=('--if-none-match')
+                UPLOAD_CONDITION+=('*')
+            fi
+
+            # 其实 .files 和 .db 两个文件只要一个 .files 的就够了，可以当 db 使
+            echo "Adding packages to database file"
+            cp "$TEMP_DB_FILE" "$TEMP_DB_FILE_DOT_FILES"
+            docker run --rm -v "$TEMP_DB_FILE_DIRECTORY":/repo -v "$CWD":"$CWD" archlinux:latest bash -c 'repo-add /repo/*.db.tar.gz ${{ inputs.package-files }}'
+            sudo chown -R $(id -u):$(id -g) "$TEMP_DB_FILE_DIRECTORY"
+            rm "$TEMP_DB_FILE"
+
+            echo "Try upload new database file"
+            UPLOAD_SUCCESS="false"
+            if ! UPLOAD_OUTPUT="$(az storage blob upload --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --file "$TEMP_DB_FILE_DOT_FILES" --name "$TARGET_PATH.db.tar.gz" --content-cache "$CACHE_CONTROL_DATABASE_FILE" "${UPLOAD_CONDITION[@]}" 2>&1)"; then
+                if ! echo "$UPLOAD_OUTPUT" | grep 'ConditionNotMet\|BlobAlreadyExists'; then
+                    echo "Unknown error when uploading new database file: $UPLOAD_OUTPUT"
+                    exit 1
+                fi
+            else
+                echo "Uploaded new database file successfully!"
+                UPLOAD_SUCCESS="true"
+            fi
+
+            rm -rf "$TEMP_DB_FILE_DIRECTORY"
+
+            echo "::endgroup::"
+
+            if [[ "$UPLOAD_SUCCESS" == "true" ]]; then
+                echo "::group::Delete old package files"
+          done
+        done
+      env:
+        AZURE_BLOB_STORAGE_CONNECTION_STRING: ${{ inputs.azure-blob-storage-connection-string }}
+        AZURE_BLOB_STORAGE_CONTAINER: ${{ inputs.azure-blob-storage-container }}

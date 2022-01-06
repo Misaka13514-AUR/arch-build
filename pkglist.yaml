@@ -97,3 +97,6 @@ x86_64:
   # - marktext
   # - deepin-wine6-stable
   # - nvidia-470xx-utils
+
+aarch64-packonly: 
+aarch64-compile:

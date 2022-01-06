@@ -81,26 +81,15 @@ jobs:
           # 21cn:repo-ng
           args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/loongarch64/
 
-  #     - name: determine if this package need to be uploaded
-  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
-  #       id: isNeed2
-  #       run: echo ::set-output name=isNeed::$(curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/exists/${{ steps.pkgname.outputs.pkgname }})
-
-  #     - name: deploy file
-  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
-  #       uses: wlixcc/SFTP-Deploy-Action@v1.0
-  #       with:
-  #         username: 'repobuilder'
-  #         server: ${{ secrets.REPO_BUILDER_HOST }}
-  #         ssh_private_key: ${{ secrets.REPO_BUILDER_PRIVKEY }}
-  #         local_path: ${{ matrix.repos }}/${{ steps.pkgname.outputs.pkgname }}
-  #         remote_path: '/home/repobuilder/repo-builder/tmp'
-
-  #     - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/add-package/${{ steps.pkgname.outputs.pkgname }}
-  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' && steps.isNeed2.outputs.isNeed == 'false' }}
-
-  #     - run: curl -u ${{ secrets.REPO_BUILDER_AUTH }} ${{ secrets.REPO_BUILDER_API }}/api/queue
-
+      - name: 提交元信息到 Azure Blob 存储
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        uses: ./commit-repo-db
+        with: 
+          azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
+          azure-blob-storage-container: repo
+          arch: x86_64
+          package-files: ${{ steps.build.outputs.filelist }}
+          is-any-arch-package: ${{ steps.is-needed.outputs.arch == 'any' }}
 
   # 编译安装的包不能这么搞
   # buildAUR-aarch64:
