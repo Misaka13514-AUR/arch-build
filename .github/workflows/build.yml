@@ -33,21 +33,18 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: 检查包是否已存在
+        id: is-needed
         uses: ./check-is-needed
         with: 
           package-name: ${{ matrix.repos }}
           arch: x86_64
 
-  #     - uses: Clansty/build-aur-action@master
-  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
-  #       with:
-  #         repo-name: ${{ matrix.repos }}
-
-  #     - id: pkgname
-  #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
-  #       working-directory: ${{ matrix.repos }}
-  #       # 防止一个 pkgbase 两个包引起问题
-  #       run: echo ::set-output name=pkgname::$(ls ${{ steps.isNeed.outputs.pkgname }}-${{ steps.isNeed.outputs.pkgver }}-${{ steps.isNeed.outputs.pkgrel }}-*.pkg.tar.*)
+      - name: 使用 yay 构建包
+        id: build
+        uses: Clansty/build-aur-action@master
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        with:
+          repo-name: ${{ matrix.repos }}
 
   #     - name: determine if this package need to be uploaded
   #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}

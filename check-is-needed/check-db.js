@@ -3,7 +3,7 @@ const path = require('path')
 const subdirs = fs.readdirSync('pkgdb')
 const { PKGNAME, PKGVER, PKGREL, EPOCH } = process.env
 const newVer = `${EPOCH ? EPOCH + ':' : ''}${PKGVER}-${PKGREL}`
-console.log(`::notice::包名称: ${PKGNAME}
+console.log(`包名称: ${PKGNAME}
 目标版本: ${newVer}`)
 
 for (const subdir of subdirs) {
