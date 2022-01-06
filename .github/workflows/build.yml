@@ -46,6 +46,40 @@ jobs:
         with:
           repo-name: ${{ matrix.repos }}
 
+      - name: 把包上传到 OneDrive - x86_64
+        uses: wei/rclone@v1.1.1
+        env:
+          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+        with:
+          # 21cn:repo-ng
+          args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/x86_64/
+
+      # 以下操作对于包的架构为 any 的情况
+      - name: 把包上传到 OneDrive - i686
+        if: ${{ steps.is-needed.outputs.arch == 'any' }}
+        uses: wei/rclone@v1.1.1
+        env:
+          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+        with:
+          # 21cn:repo-ng
+          args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/i686/
+      - name: 把包上传到 OneDrive - aarch64
+        if: ${{ steps.is-needed.outputs.arch == 'any' }}
+        uses: wei/rclone@v1.1.1
+        env:
+          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+        with:
+          # 21cn:repo-ng
+          args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/aarch64/
+      - name: 把包上传到 OneDrive - loongarch64
+        if: ${{ steps.is-needed.outputs.arch == 'any' }}
+        uses: wei/rclone@v1.1.1
+        env:
+          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+        with:
+          # 21cn:repo-ng
+          args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/loongarch64/
+
   #     - name: determine if this package need to be uploaded
   #       if: ${{ steps.isNeed.outputs.isNeed == 'false' }}
   #       id: isNeed2

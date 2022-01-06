@@ -12,6 +12,9 @@ outputs:
   old-package-name:
     description: 在包构建流程结束时需要删除的旧包名
     value: ${{ steps.check-db.outputs.old-package-name }}
+  arch:
+    description: 包里面标称的架构，下面的步骤用来检测 any
+    value: ${{ steps.get-name.outputs.arch }}
 runs:
   using: composite
   steps:
@@ -36,6 +39,7 @@ runs:
         echo ::set-output name=pkgver::$pkgver
         echo ::set-output name=pkgrel::$pkgrel
         echo ::set-output name=epoch::$epoch
+        echo ::set-output name=arch::$arch
 
     - name: 检查数据库
       shell: bash
