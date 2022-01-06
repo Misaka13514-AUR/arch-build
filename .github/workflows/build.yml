@@ -1,7 +1,7 @@
 name: BUILD
 
 on:
-  push:
+  # push:
   # schedule:
   #   - cron:  '1 */8 * * *'
   workflow_dispatch:
@@ -47,6 +47,7 @@ jobs:
           repo-name: ${{ matrix.repos }}
 
       - name: 把包上传到 OneDrive - x86_64
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         uses: wei/rclone@v1.1.1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
@@ -56,7 +57,7 @@ jobs:
 
       # 以下操作对于包的架构为 any 的情况
       - name: 把包上传到 OneDrive - i686
-        if: ${{ steps.is-needed.outputs.arch == 'any' }}
+        if: ${{ steps.is-needed.outputs.arch == 'any' && steps.is-needed.outputs.is-needed == 'true' }}
         uses: wei/rclone@v1.1.1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
@@ -64,7 +65,7 @@ jobs:
           # 21cn:repo-ng
           args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/i686/
       - name: 把包上传到 OneDrive - aarch64
-        if: ${{ steps.is-needed.outputs.arch == 'any' }}
+        if: ${{ steps.is-needed.outputs.arch == 'any' && steps.is-needed.outputs.is-needed == 'true' }}
         uses: wei/rclone@v1.1.1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
@@ -72,7 +73,7 @@ jobs:
           # 21cn:repo-ng
           args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/aarch64/
       - name: 把包上传到 OneDrive - loongarch64
-        if: ${{ steps.is-needed.outputs.arch == 'any' }}
+        if: ${{ steps.is-needed.outputs.arch == 'any' && steps.is-needed.outputs.is-needed == 'true' }}
         uses: wei/rclone@v1.1.1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}

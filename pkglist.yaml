@@ -1,13 +1,13 @@
 x86_64:
   # 一个 PKGBASE 一行，包含 PKGBASE 中所有的包
-  - pycharm-professional
-  - deepin-wine-wechat
-  - yesplaymusic
-  - yesplaymusic-electron
-  - discord_arch_electron
-  - osu-lazer
-  - storageexplorer
-  # - visual-paradigm-community
+  # - pycharm-professional
+  # - deepin-wine-wechat
+  # - yesplaymusic
+  # - yesplaymusic-electron
+  # - discord_arch_electron
+  # - osu-lazer
+  # - storageexplorer
+  - visual-paradigm-community
   # - visual-paradigm
   # - finalshell
   # - rdm-bin
@@ -58,8 +58,10 @@ x86_64:
   # - deepin-wine6-stable
   # - nvidia-prime-select-git
   # - pocketsphinx
-  # - deepin-wine5
-  # - deepin-wine5-helper
+  - deepin-wine5
+  - deepin-wine5-helper
+  - deepin-wine-plugin
+  - deepin-wine-plugin-virtual
   # - smallpdf-desktop
   # - altserver-bin
   # - nvidia-utils-nvlax
