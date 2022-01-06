@@ -38,6 +38,7 @@ for (const subdir of subdirs) {
     }
     console.log(`::notice::包 ${PKGNAME} 过期，需要构建
 ::set-output name=is-needed::true`)
+    return
 }
 // 包不存在
 console.log(`::notice::包 ${PKGNAME} 不存在，需要构建
