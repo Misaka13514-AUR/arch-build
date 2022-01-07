@@ -97,6 +97,8 @@ x86_64:
   - loongarch64-linux-gnu-linux-api-headers
   - loongarch64-linux-gnu-binutils
   - intellij-idea-ultimate-edition
+  - usbfluxd
+  - nodejs-http-server
 
 aarch64-packonly: 
   - electron-bin
