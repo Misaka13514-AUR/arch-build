@@ -103,7 +103,15 @@ jobs:
           azure-blob-storage-container: repo
           arch: x86_64
           package-files: ${{ steps.build.outputs.filelist }}
-          is-any-arch-package: ${{ steps.is-needed.outputs.arch == 'any' }}
+
+      - name: 提交其它架构元信息到 Azure Blob 存储
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        uses: ./commit-repo-db
+        with: 
+          azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
+          azure-blob-storage-container: repo
+          arch: i686 aarch64 loongarch64
+          package-files: ${{ steps.build.outputs.filelist }}
 
   # 编译安装的包不能这么搞
   # buildAUR-aarch64:

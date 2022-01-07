@@ -13,8 +13,6 @@ inputs:
     required: true
   arch:
     required: true
-  is-any-arch-package:
-    required: true
 runs:
   using: composite
   steps:
@@ -27,12 +25,7 @@ runs:
 
         CACHE_CONTROL_DATABASE_FILE="no-cache"
 
-        ARCHES=(${{ inputs.arch }})
-        if ${{ inputs.is-any-arch-package }}; then
-          ARCHES=(x86_64 i686 aarch64 loongarch64)
-        fi
-
-        for ARCH in $ARCHES
+        for ARCH in ${{ inputs.arch }}
         do
           TRIES=0
           while true; do
