@@ -96,8 +96,16 @@ x86_64:
   - loongarch64-linux-gnu-glibc
   - loongarch64-linux-gnu-linux-api-headers
   - loongarch64-linux-gnu-binutils
+  - intellij-idea-ultimate-edition
 
 aarch64-packonly: 
   - electron-bin
+  - electron12-bin
+  - electron13-bin
+  - visual-studio-code-bin
+  - yay-bin
+  - webstorm
+  - pycharm-professional
+
 aarch64-compile:
 loongarch64-packonly: []
