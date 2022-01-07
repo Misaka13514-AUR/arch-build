@@ -3,7 +3,8 @@ inputs:
   pkglist:
     required: true
 outputs:
-  - pkglist
+  pkglist:
+    description: 转换好的 pkglist
 runs:
   using: 'node12'
   main: 'index.js'
