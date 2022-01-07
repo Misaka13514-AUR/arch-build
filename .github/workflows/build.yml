@@ -45,7 +45,7 @@ jobs:
 
       - name: 使用 yay 构建包
         id: build
-        uses: Clansty/build-aur-action@master
+        uses: Clansty/build-aur-action@${{ matrix.arch }}
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
           repo-name: ${{ matrix.repo }}

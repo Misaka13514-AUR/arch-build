@@ -57,7 +57,7 @@ x86_64:
   - nvidia-prime-select-git
   - pocketsphinx
   - deepin-wine5
-  - deepin-wine5-helper
+  - deepin-wine-helper
   - deepin-wine-plugin
   - deepin-wine-plugin-virtual
   - smallpdf-desktop
