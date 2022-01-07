@@ -39,6 +39,8 @@ jobs:
           package-name: ${{ matrix.repos }}
           arch: x86_64
 
+      - run: echo ${{ steps.is-needed.outputs.arch == 'any' }}
+
       - name: 使用 yay 构建包
         id: build
         uses: Clansty/build-aur-action@master

@@ -75,7 +75,7 @@ x86_64:
   - mongodb-tools-bin
   - redis-desktop-manager
   - visual-studio-code-bin
-  - balena-etcher
+  - etcher-bin
   - aliyunpan-liupan1890
   - baidunetdisk-electron
   - wechat-uos
