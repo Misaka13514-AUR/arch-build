@@ -71,7 +71,6 @@ runs:
             rm "$TEMP_DB_FILE"
 
             echo "Try upload new database file"
-            UPLOAD_SUCCESS="false"
             if ! UPLOAD_OUTPUT="$(az storage blob upload --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --file "$TEMP_DB_FILE_DOT_FILES" --name "$TARGET_PATH.db.tar.gz" --content-cache "$CACHE_CONTROL_DATABASE_FILE" "${UPLOAD_CONDITION[@]}" 2>&1)"; then
                 if ! echo "$UPLOAD_OUTPUT" | grep 'ConditionNotMet\|BlobAlreadyExists'; then
                     echo "Unknown error when uploading new database file: $UPLOAD_OUTPUT"
@@ -79,7 +78,7 @@ runs:
                 fi
             else
                 echo "Uploaded new database file successfully!"
-                UPLOAD_SUCCESS="true"
+                break
             fi
 
             rm -rf "$TEMP_DB_FILE_DIRECTORY"
