@@ -11,7 +11,7 @@ jobs:
   pkglist:
     runs-on: ubuntu-latest
     outputs:
-      data: ${{ steps.yaml2json.outputs.data }}
+      data: ${{ steps.parse.outputs.pkglist }}
     steps:
       - uses: actions/checkout@v1
       - uses: fabasoad/yaml-json-xml-converter-action@main
@@ -20,6 +20,10 @@ jobs:
           path: 'pkglist.yaml'
           from: 'yaml'
           to: 'json'
+      - uses: ./parse-pkglist
+        id: parse
+        with:
+          pkglist: ${{ steps.yaml2json.outputs.data }}
 
   buildAUR-x86_64:
     runs-on: ubuntu-latest
@@ -27,11 +31,7 @@ jobs:
      - pkglist
     strategy:
       matrix:
-        include: 
-          - repos: ${{ fromJSON(needs.pkglist.outputs.data).x86_64 }}
-            arch: x86_64
-          - repos: ${{ fromJSON(needs.pkglist.outputs.data).aarch64-packonly }}
-            arch: aarch64
+        include: ${{ fromJSON(needs.pkglist.outputs.data).builds-on-x86_64 }}
       fail-fast: false
     steps:
       - uses: actions/checkout@v1
@@ -40,7 +40,7 @@ jobs:
         id: is-needed
         uses: ./check-is-needed
         with: 
-          package-name: ${{ matrix.repos }}
+          package-name: ${{ matrix.repo }}
           arch: ${{ matrix.arch }}
 
       - name: 使用 yay 构建包
@@ -48,7 +48,7 @@ jobs:
         uses: Clansty/build-aur-action@master
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
-          repo-name: ${{ matrix.repos }}
+          repo-name: ${{ matrix.repo }}
 
       - name: 同步 docker 内外目录
         # $PWD 在 docker 中被映射到 /github/workspace

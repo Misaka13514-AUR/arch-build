@@ -1,0 +1,9 @@
+name: 解析 pkglist
+inputs:
+  pkglist:
+    required: true
+outputs:
+  pkglist:
+runs:
+  using: 'node12'
+  main: 'index.js'

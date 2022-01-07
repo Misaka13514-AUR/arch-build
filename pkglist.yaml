@@ -98,4 +98,6 @@ x86_64:
   - loongarch64-linux-gnu-binutils
 
 aarch64-packonly: 
+  - electron-bin
 aarch64-compile:
+loongarch64-packonly: []
