@@ -46,6 +46,12 @@ jobs:
         with:
           repo-name: ${{ matrix.repos }}
 
+      - name: 复制文件以便上传
+        # rclone 没法指定多个文件
+        run: |
+          mkdir rclone-upload
+          cp ${{ steps.build.outputs.filelist }} rclone-upload/
+
       - name: 把包上传到 OneDrive - x86_64
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         uses: wei/rclone@v1.1.1
@@ -53,7 +59,7 @@ jobs:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
           # 21cn:repo-ng
-          args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/x86_64/
+          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/x86_64/
 
       # 以下操作对于包的架构为 any 的情况
       - name: 把包上传到 OneDrive - i686
@@ -63,7 +69,7 @@ jobs:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
           # 21cn:repo-ng
-          args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/i686/
+          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/i686/
       - name: 把包上传到 OneDrive - aarch64
         if: ${{ steps.is-needed.outputs.arch == 'any' && steps.is-needed.outputs.is-needed == 'true' }}
         uses: wei/rclone@v1.1.1
@@ -71,7 +77,7 @@ jobs:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
           # 21cn:repo-ng
-          args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/aarch64/
+          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/aarch64/
       - name: 把包上传到 OneDrive - loongarch64
         if: ${{ steps.is-needed.outputs.arch == 'any' && steps.is-needed.outputs.is-needed == 'true' }}
         uses: wei/rclone@v1.1.1
@@ -79,7 +85,7 @@ jobs:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
           # 21cn:repo-ng
-          args: copy ${{ steps.build.outputs.filelist }} ${{ secrets.REPO_PATH }}/loongarch64/
+          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/loongarch64/
 
       - name: 提交元信息到 Azure Blob 存储
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}

@@ -89,6 +89,7 @@ runs:
             if [[ "$UPLOAD_SUCCESS" == "true" ]]; then
                 echo "::group::Delete old package files"
           done
+          echo 更新 $ARCH 成功
         done
         
       env:
