@@ -3,7 +3,7 @@ inputs:
   pkglist:
     required: true
 outputs:
-  pkglist:
+  - pkglist
 runs:
   using: 'node12'
   main: 'index.js'

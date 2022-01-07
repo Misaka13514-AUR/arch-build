@@ -3,7 +3,7 @@ const github = require('@actions/github');
 
 const origin = JSON.parse(core.getInput('pkglist'))
 const out = {
-    "builds-on-x86_64": [
+    'builds-on-x86_64': [
         ...origin.x86_64.map(repo => ({
             repo,
             arch: 'x86_64'
