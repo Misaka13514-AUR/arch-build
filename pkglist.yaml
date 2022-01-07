@@ -89,7 +89,7 @@ x86_64:
   - linux-xanmod-tt-uksm-cjktty
   - miredo
   - cloudflare-wrangler
-  - marktext
+  - marktext-bin
   - deepin-wine6-stable
   - qemu-loongarch64
   - loongarch64-linux-gnu-gcc
