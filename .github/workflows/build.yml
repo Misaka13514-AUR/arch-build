@@ -39,8 +39,6 @@ jobs:
           package-name: ${{ matrix.repos }}
           arch: x86_64
 
-      - run: echo ${{ steps.is-needed.outputs.arch == 'any' }}
-
       - name: 使用 yay 构建包
         id: build
         uses: Clansty/build-aur-action@master
@@ -62,40 +60,14 @@ jobs:
           mkdir rclone-upload
           cp ${{ steps.build.outputs.filelist }} rclone-upload/
 
-      - name: 把包上传到 OneDrive - x86_64
+      - name: 把包上传到 OneDrive
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         uses: wei/rclone@v1.1.1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
           # 21cn:repo-ng
-          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/x86_64/
-
-      # 以下操作对于包的架构为 any 的情况
-      - name: 把包上传到 OneDrive - i686
-        if: ${{ steps.is-needed.outputs.arch == 'any' && steps.is-needed.outputs.is-needed == 'true' }}
-        uses: wei/rclone@v1.1.1
-        env:
-          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
-        with:
-          # 21cn:repo-ng
-          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/i686/
-      - name: 把包上传到 OneDrive - aarch64
-        if: ${{ steps.is-needed.outputs.arch == 'any' && steps.is-needed.outputs.is-needed == 'true' }}
-        uses: wei/rclone@v1.1.1
-        env:
-          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
-        with:
-          # 21cn:repo-ng
-          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/aarch64/
-      - name: 把包上传到 OneDrive - loongarch64
-        if: ${{ steps.is-needed.outputs.arch == 'any' && steps.is-needed.outputs.is-needed == 'true' }}
-        uses: wei/rclone@v1.1.1
-        env:
-          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
-        with:
-          # 21cn:repo-ng
-          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/loongarch64/
+          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/
 
       - name: 提交元信息到 Azure Blob 存储
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
@@ -103,16 +75,7 @@ jobs:
         with: 
           azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
           azure-blob-storage-container: repo
-          arch: x86_64
-          package-files: ${{ steps.build.outputs.filelist }}
-
-      - name: 提交其它架构元信息到 Azure Blob 存储
-        if: ${{ steps.is-needed.outputs.arch == 'any' && steps.is-needed.outputs.is-needed == 'true' }}
-        uses: ./
-        with: 
-          azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
-          azure-blob-storage-container: repo
-          arch: i686 aarch64 loongarch64
+          arch: ${{ steps.is-needed.outputs.arch }}
           package-files: ${{ steps.build.outputs.filelist }}
 
   # 编译安装的包不能这么搞

@@ -1,10 +1,18 @@
 const fs = require('fs')
 const path = require('path')
 const subdirs = fs.readdirSync('pkgdb')
-const { PKGNAME, PKGVER, PKGREL, EPOCH } = process.env
+const { PKGNAME, PKGVER, PKGREL, EPOCH, ARCH, ARCHIN } = process.env
 const newVer = `${EPOCH ? EPOCH + ':' : ''}${PKGVER}-${PKGREL}`
 console.log(`包名称: ${PKGNAME}
 目标版本: ${newVer}`)
+
+// 计算一下 arch
+if (ARCH==='any'){
+    console.log('::set-output name=arch::x86_64 i686 aarch64 loongarch64')
+}
+else{
+    console.log(`::set-output name=arch::${ARCHIN}`)
+}
 
 for (const subdir of subdirs) {
     const content = fs.readFileSync(path.join('pkgdb', subdir, 'desc'), 'utf-8')

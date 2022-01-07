@@ -14,7 +14,7 @@ outputs:
     value: ${{ steps.check-db.outputs.old-package-name }}
   arch:
     description: 包里面标称的架构，下面的步骤用来检测 any
-    value: ${{ steps.get-name.outputs.arch }}
+    value: ${{ steps.check-db.outputs.arch }}
 runs:
   using: composite
   steps:
@@ -50,3 +50,5 @@ runs:
         PKGVER: ${{ steps.get-name.outputs.pkgver }}
         PKGREL: ${{ steps.get-name.outputs.pkgrel }}
         EPOCH: ${{ steps.get-name.outputs.epoch }}
+        ARCH: ${{ steps.get-name.outputs.arch }}
+        ARCHIN: ${{ inputs.arch }}
