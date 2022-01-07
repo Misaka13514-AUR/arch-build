@@ -24,12 +24,10 @@ x86_64:
   - ttf-twemoji
   - ttf-twemoji-color
   - microsoft-edge-beta-bin
-  - ffmpeg-full
   - chromaprint-fftw
   - davs2
   - flite1-patched
   - libklvanc-git
-  - libopenmpt-svn
   - librist
   - shine
   - uavs3d
@@ -70,7 +68,6 @@ x86_64:
   - layan-cursor-theme-git
   - dduper-bin
   - bedup
-  - feishu
   - code-server
   - google-chrome
   - mongodb-bin
@@ -94,6 +91,11 @@ x86_64:
   - cloudflare-wrangler
   - marktext
   - deepin-wine6-stable
+  - qemu-loongarch64
+  - loongarch64-linux-gnu-gcc
+  - loongarch64-linux-gnu-glibc
+  - loongarch64-linux-gnu-linux-api-headers
+  - loongarch64-linux-gnu-binutils
 
 aarch64-packonly: 
 aarch64-compile:
