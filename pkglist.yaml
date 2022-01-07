@@ -7,9 +7,9 @@ x86_64:
   # - discord_arch_electron
   # - osu-lazer
   # - storageexplorer
-  - visual-paradigm-community
+  # - visual-paradigm-community
   # - visual-paradigm
-  # - finalshell
+  - finalshell
   # - rdm-bin
   # - realvnc-vnc-viewer
   # - realvnc-vnc-server
@@ -58,10 +58,10 @@ x86_64:
   # - deepin-wine6-stable
   # - nvidia-prime-select-git
   # - pocketsphinx
-  - deepin-wine5
-  - deepin-wine5-helper
-  - deepin-wine-plugin
-  - deepin-wine-plugin-virtual
+  # - deepin-wine5
+  # - deepin-wine5-helper
+  # - deepin-wine-plugin
+  # - deepin-wine-plugin-virtual
   # - smallpdf-desktop
   # - altserver-bin
   # - nvidia-utils-nvlax

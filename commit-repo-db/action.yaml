@@ -32,7 +32,8 @@ runs:
           ARCHES=(x86_64 i686 aarch64 loongarch64)
         fi
 
-        for ARCH in $ARCHES; do
+        for ARCH in $ARCHES
+        do
           TRIES=0
           while true; do
             ((TRIES=TRIES+1))
@@ -89,6 +90,7 @@ runs:
                 echo "::group::Delete old package files"
           done
         done
+        
       env:
         AZURE_BLOB_STORAGE_CONNECTION_STRING: ${{ inputs.azure-blob-storage-connection-string }}
         AZURE_BLOB_STORAGE_CONTAINER: ${{ inputs.azure-blob-storage-container }}
