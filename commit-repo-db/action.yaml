@@ -44,13 +44,13 @@ runs:
             TEMP_DB_FILE="$TEMP_DB_FILE_DIRECTORY/Clansty.db.tar.gz"
             TEMP_DB_FILE_DOT_FILES="$TEMP_DB_FILE_DIRECTORY/Clansty.files.tar.gz"
 
-            TARGET_PATH=${ARCH}/Clansty
+            TARGET_PATH=${ARCH}.tar.gz
 
             echo "Downloading old database file"
-            EXISTS="$(az storage blob exists --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --name "$TARGET_PATH.db.tar.gz" | jq -r .exists)"
+            EXISTS="$(az storage blob exists --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --name "$TARGET_PATH" | jq -r .exists)"
             UPLOAD_CONDITION=()
             if [[ "$EXISTS" == "true" ]]; then
-                ETAG="$(az storage blob download --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --file "$TEMP_DB_FILE" --name "$TARGET_PATH.db.tar.gz" | jq -r .properties.etag)"
+                ETAG="$(az storage blob download --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --file "$TEMP_DB_FILE" --name "$TARGET_PATH" | jq -r .properties.etag)"
                 if [[ "$ETAG" == "" ]]; then
                     echo "Failed to download old database file!"
                     exit 1
@@ -71,7 +71,7 @@ runs:
             rm "$TEMP_DB_FILE"
 
             echo "Try upload new database file"
-            if ! UPLOAD_OUTPUT="$(az storage blob upload --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --file "$TEMP_DB_FILE_DOT_FILES" --name "$TARGET_PATH.db.tar.gz" --content-cache "$CACHE_CONTROL_DATABASE_FILE" "${UPLOAD_CONDITION[@]}" 2>&1)"; then
+            if ! UPLOAD_OUTPUT="$(az storage blob upload --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --file "$TEMP_DB_FILE_DOT_FILES" --name "$TARGET_PATH" --content-cache "$CACHE_CONTROL_DATABASE_FILE" "${UPLOAD_CONDITION[@]}" 2>&1)"; then
                 if ! echo "$UPLOAD_OUTPUT" | grep 'ConditionNotMet\|BlobAlreadyExists'; then
                     echo "Unknown error when uploading new database file: $UPLOAD_OUTPUT"
                     exit 1
