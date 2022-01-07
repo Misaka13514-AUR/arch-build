@@ -45,10 +45,11 @@ jobs:
 
       - name: 使用 yay 构建包
         id: build
-        uses: Clansty/build-aur-action@${{ matrix.arch }}
+        uses: Clansty/build-aur-action@main
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
           repo-name: ${{ matrix.repo }}
+          arch: ${{ matrix.arch }}
 
       - name: 同步 docker 内外目录
         # $PWD 在 docker 中被映射到 /github/workspace
