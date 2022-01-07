@@ -56,7 +56,7 @@ jobs:
         # rclone 没法指定多个文件
         run: |
           mkdir rclone-upload
-          ln ${{ steps.build.outputs.filelist }} rclone-upload/
+          cp ${{ steps.build.outputs.filelist }} rclone-upload/
 
       - name: 把包上传到 OneDrive - x86_64
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
