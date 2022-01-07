@@ -66,7 +66,7 @@ runs:
             # 其实 .files 和 .db 两个文件只要一个 .files 的就够了，可以当 db 使
             echo "Adding packages to database file"
             cp "$TEMP_DB_FILE" "$TEMP_DB_FILE_DOT_FILES"
-            docker run --rm -v "$TEMP_DB_FILE_DIRECTORY":/repo -v "$CWD":"/github/workspace" archlinux:latest bash -c 'repo-add /repo/*.db.tar.gz ${{ inputs.package-files }}'
+            docker run --rm -v "$TEMP_DB_FILE_DIRECTORY":/repo -v "/github/workspace":"/github/workspace" archlinux:latest bash -c 'repo-add /repo/*.db.tar.gz ${{ inputs.package-files }}'
             sudo chown -R $(id -u):$(id -g) "$TEMP_DB_FILE_DIRECTORY"
             rm "$TEMP_DB_FILE"
 
