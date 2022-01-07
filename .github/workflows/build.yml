@@ -50,12 +50,14 @@ jobs:
 
       - name: 同步 docker 内外目录
         # $PWD 在 docker 中被映射到 /github/workspace
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: |
           sudo mkdir /github
           sudo ln -s $PWD /github/workspace
 
       - name: 复制文件以便上传
         # rclone 没法指定多个文件
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: |
           mkdir rclone-upload
           cp ${{ steps.build.outputs.filelist }} rclone-upload/
@@ -105,7 +107,7 @@ jobs:
           package-files: ${{ steps.build.outputs.filelist }}
 
       - name: 提交其它架构元信息到 Azure Blob 存储
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        if: ${{ steps.is-needed.outputs.arch == 'any' && steps.is-needed.outputs.is-needed == 'true' }}
         uses: ./
         with: 
           azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
