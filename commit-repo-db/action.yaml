@@ -28,7 +28,7 @@ runs:
         CACHE_CONTROL_DATABASE_FILE="no-cache"
 
         ARCHES=(${{ inputs.arch }})
-        if [[ "${{ inputs.is-any-arch-package }}" == "true" ]]; then
+        if ${{ inputs.is-any-arch-package }}; then
           ARCHES=(x86_64 i686 aarch64 loongarch64)
         fi
 
