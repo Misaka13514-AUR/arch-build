@@ -23,6 +23,7 @@ x86_64:
   - rider
   - ttf-twemoji
   - ttf-twemoji-color
+  - microsoft-edge-stable
   - microsoft-edge-beta-bin
   - chromaprint-fftw
   - davs2
