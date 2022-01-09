@@ -1,114 +1,113 @@
 x86_64:
   # 一个 PKGBASE 一行，包含 PKGBASE 中所有的包
-  - pycharm-professional
-  - deepin-wine-wechat
-  - yesplaymusic
-  - yesplaymusic-electron
-  - discord_arch_electron
-  - osu-lazer
-  - storageexplorer
-  - visual-paradigm-community
-  - visual-paradigm
-  - finalshell
-  - rdm-bin
-  - realvnc-vnc-viewer
-  - realvnc-vnc-server
-  - clash-for-windows-bin
-  - cosbrowser
-  - slack-electron
-  - jadx-gui-desktop
-  - mkinitcpio-transflag
-  - cydia-impactor
-  - typora-free
-  - rider
-  - ttf-twemoji
-  - ttf-twemoji-color
-  - microsoft-edge-stable-bin
-  - microsoft-edge-beta-bin
-  - chromaprint-fftw
-  - davs2
-  - flite1-patched
-  - libklvanc-git
-  - librist
-  - shine
-  - uavs3d
-  - vo-amrwbenc
-  - xavs
-  - xavs2
-  - rockchip-mpp
-  - lensfun-git
-  - wrapland-kwinft
-  - disman-kwinft
-  - kdisplay-kwinft
-  - kwinft
-  - uavs3d-git
-  - openssl-static
-  - howdy
-  - trustedqsl
-  - wxgtk2.8
-  - hamradio-menus
-  - pam-python
-  - python-face_recognition_models
-  - python-face_recognition
-  - guacamole-server
-  - guacamole-client
-  - uuid
+  - aliyunpan-liupan1890
+  - altserver-bin
   - aria2-systemd
-  - deepin-wine6-stable
-  - nvidia-prime-select-git
-  - pocketsphinx
-  - deepin-wine5
+  - baidunetdisk-electron
+  - bedup
+  - chromaprint-fftw
+  - clash-for-windows-bin
+  - cloudflare-wrangler
+  - code-server
+  - cosbrowser
+  - ctcontainer
+  - cydia-impactor
+  - davs2
+  - dduper-bin
   - deepin-wine-helper
   - deepin-wine-plugin
   - deepin-wine-plugin-virtual
-  - smallpdf-desktop
-  - altserver-bin
-  - nvidia-utils-nvlax
-  - ctcontainer
-  - nvidia-470xx-utils
-  - layan-cursor-theme-git
-  - dduper-bin
-  - bedup
-  - code-server
+  - deepin-wine-wechat
+  - deepin-wine5
+  - deepin-wine6-stable
+  - deepin-wine6-stable
+  - discord_arch_electron
+  - disman-kwinft
+  - etcher-bin
+  - finalshell
+  - flite1-patched
   - google-chrome
+  - guacamole-client
+  - guacamole-server
+  - hamradio-menus
+  - howdy
+  - intellij-idea-ultimate-edition
+  - jadx-gui-desktop
+  - kdisplay-kwinft
+  - kwin-bismuth
+  - kwinft
+  - layan-cursor-theme-git
+  - lensfun-git
+  - libklvanc-git
+  - librist
+  - linux-xanmod-tt-uksm-cjktty
+  - loongarch64-linux-gnu-binutils
+  - loongarch64-linux-gnu-linux-api-headers
+  - marktext-bin
+  - microsoft-edge-beta-bin
+  - microsoft-edge-stable-bin
+  - miredo
+  - mkinitcpio-transflag
   - mongodb-bin
   - mongodb-compass
   - mongodb-tools-bin
+  - musikcube
+  - nodejs-http-server
+  - noto-color-emoji-fontconfig
+  - nvidia-470xx-utils
+  - nvidia-prime-select-git
+  - nvidia-utils-nvlax
+  - openssl-static
+  - osu-lazer
+  - pam-python
+  - pocketsphinx
+  - pycharm-professional
+  - python-face_recognition
+  - python-face_recognition_models
+  - qemu-loongarch64
+  - rdm-bin
+  - realvnc-vnc-server
+  - realvnc-vnc-viewer
   - redis-desktop-manager
+  - rider
+  - rockchip-mpp
+  - shine
+  - slack-electron
+  - smallpdf-desktop
+  - storageexplorer
+  - sway-launcher-desktop
+  - trustedqsl
+  - ttf-twemoji
+  - ttf-twemoji-color
+  - typora-free
+  - uavs3d
+  - uavs3d-git
+  - usbfluxd
+  - uuid
+  - visual-paradigm
+  - visual-paradigm-community
   - visual-studio-code-bin
-  - etcher-bin
-  - aliyunpan-liupan1890
-  - baidunetdisk-electron
+  - vo-amrwbenc
   - wechat-uos
   - wemeet-bin
   - wps-office
   - wps-office-cn
-  - musikcube
-  - sway-launcher-desktop
-  - noto-color-emoji-fontconfig
-  - kwin-bismuth
-  - linux-xanmod-tt-uksm-cjktty
-  - miredo
-  - cloudflare-wrangler
-  - marktext-bin
-  - deepin-wine6-stable
-  - qemu-loongarch64
-  - loongarch64-linux-gnu-gcc
-  - loongarch64-linux-gnu-glibc
-  - loongarch64-linux-gnu-linux-api-headers
-  - loongarch64-linux-gnu-binutils
-  - intellij-idea-ultimate-edition
-  - usbfluxd
-  - nodejs-http-server
+  - wrapland-kwinft
+  - wxgtk2.8
+  - xavs
+  - xavs2
+  - yesplaymusic
+  - yesplaymusic-electron
 
 aarch64-packonly: 
   - electron-bin
   - electron12-bin
   - electron13-bin
-  - visual-studio-code-bin
-  - yay-bin
-  - webstorm
   - pycharm-professional
+  - visual-studio-code-bin
+  - webstorm
+  - wps-office-cn
+  - yay-bin
 
 aarch64-compile:
 loongarch64-packonly: []
