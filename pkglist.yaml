@@ -40,6 +40,7 @@ x86_64:
   - lensfun-git
   - libklvanc-git
   - librist
+  - limine
   - linux-xanmod-tt-uksm-cjktty
   - loongarch64-linux-gnu-binutils
   - loongarch64-linux-gnu-linux-api-headers
