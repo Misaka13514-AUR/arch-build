@@ -1,0 +1,7 @@
+name: 解析包信息
+inputs:
+  pkglist:
+    required: true
+runs:
+  using: 'node12'
+  main: 'index.js'

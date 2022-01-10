@@ -25,7 +25,7 @@ jobs:
         with:
           pkglist: ${{ steps.yaml2json.outputs.data }}
 
-  buildAUR-x86_64:
+  buildAUR-pack:
     runs-on: ubuntu-latest
     needs:
      - pkglist
@@ -82,3 +82,25 @@ jobs:
           azure-blob-storage-container: repo
           arch: ${{ steps.is-needed.outputs.arch }}
           package-files: ${{ steps.build.outputs.filelist }}
+
+  generate-build-info:
+    runs-on: ubuntu-latest
+    needs: 
+      - buildAUR-pack
+      - pkglist
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: 下载仓库数据库
+        run: |
+          mkdir pkgdb
+          wget https://archlinux.blob.core.windows.net/repo/${{ inputs.arch }}/files.tar.gz
+          tar -xzf files.tar.gz -C pkgdb
+          
+      - name: 解析包信息
+        uses: ./generate-build-info
+        with:
+          pkglist: ${{ needs.pkglist.outputs.data }}
+
+      - name: 上传 JSON 到 Azure Blob 存储
+        run: az storage blob upload --connection-string "${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}" --container-name repo --file build-info.json --name build-info.json --content-cache "no-cache"
