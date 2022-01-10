@@ -41,7 +41,6 @@ x86_64:
   - libklvanc-git
   - librist
   - limine
-  - linux-xanmod-tt-uksm-cjktty
   - loongarch64-linux-gnu-binutils
   - loongarch64-linux-gnu-linux-api-headers
   - marktext-bin
