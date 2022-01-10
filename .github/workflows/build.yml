@@ -97,8 +97,8 @@ jobs:
           for ARCH in 'x86_64' 'i686' 'aarch64' 'loongarch64'
           do
             mkdir pkgdb_$ARCH
-            wget https://archlinux.blob.core.windows.net/repo/$ARCH/files.tar.gz
-            tar -xzf files.tar.gz -C pkgdb_$ARCH
+            wget https://archlinux.blob.core.windows.net/repo/$ARCH/files.tar.gz -O files_$ARCH.tar.gz
+            tar -xzf files_$ARCH.tar.gz -C pkgdb_$ARCH
           done
           
       - name: 解析包信息
