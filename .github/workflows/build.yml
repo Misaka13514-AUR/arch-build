@@ -85,6 +85,7 @@ jobs:
 
   generate-build-info:
     runs-on: ubuntu-latest
+    if: always()
     needs: 
       - buildAUR-pack
       - pkglist
