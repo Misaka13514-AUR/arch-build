@@ -113,10 +113,13 @@ jobs:
             ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
             echo '[archlinuxcn]
             SigLevel = Never
-            Server = https://repo.archlinuxcn.org/aarch64' >> /etc/pacman.conf
+            Server = https://repo.archlinuxcn.org/aarch64
+            [Clansty]
+            SigLevel = Never
+            Server = https://repo.lwqwq.com/archlinux/aarch64' >> /etc/pacman.conf
             pacman-key --init
             pacman -Syu --noconfirm
-            pacman -S --noconfirm base-devel git yay nodejs-lts-gallium jdk11-openjdk sudo
+            pacman -S --noconfirm base-devel git yay-bin nodejs-lts-gallium jdk11-openjdk sudo
             useradd builder -m
             echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
             echo 'PACKAGER="Clansty <i@gao4.pw>"
