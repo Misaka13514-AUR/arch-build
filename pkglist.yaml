@@ -100,7 +100,6 @@ x86_64:
   - yesplaymusic-electron
 
 aarch64-packonly: 
-  - code-server
   - electron-bin
   - electron12-bin
   - electron13-bin
@@ -111,6 +110,7 @@ aarch64-packonly:
   - yay-bin
 
 aarch64-compile: 
+  - code-server
   - xrdp
 
 loongarch64-packonly: []
