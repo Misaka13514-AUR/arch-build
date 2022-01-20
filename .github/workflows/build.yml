@@ -83,12 +83,90 @@ jobs:
           arch: ${{ steps.is-needed.outputs.arch }}
           package-files: ${{ steps.build.outputs.filelist }}
 
+  buildAUR-qemu-aarch64:
+    runs-on: ubuntu-latest
+    needs:
+     - pkglist
+    strategy:
+      matrix:
+        repo: ${{ fromJSON(needs.pkglist.outputs.data).aarch64-compile }}
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: 检查包是否已存在
+        id: is-needed
+        uses: ./check-is-needed
+        with: 
+          package-name: ${{ matrix.repo }}
+          arch: aarch64
+
+      - uses: uraimo/run-on-arch-action@v2.1.1
+        name: 使用 docker 构建包
+        with:
+          arch: aarch64
+          distro: archarm_latest
+          githubToken: ${{ github.token }}
+          dockerRunArgs: |
+            --volume "${PWD}:/github/workspace"
+          install: |
+            ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+            echo '[archlinuxcn]
+            Server = https://repo.archlinuxcn.org/aarch64' >> /etc/pacman.conf
+            pacman-key --init
+            pacman -Syu --noconfirm
+            pacman -S --noconfirm archlinuxcn-keyring
+            pacman -S --noconfirm base-devel git yay nodejs-lts-gallium jdk11-openjdk sudo
+            useradd builder -m
+            echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            echo 'PACKAGER="Clansty <i@gao4.pw>"
+            COMPRESSZST=(zstd -19 -c -z -q --threads=0 -)' > /home/builder/.makepkg.conf
+          run: |
+            cd /github/workspace
+            yay -Syu
+            sudo --set-home -u builder yay -Sa --noconfirm --useask --builddir=./ "$pkgname"
+            cd $pkgname
+            echo ::set-output name=filelist::$(sudo --set-home -u builder CARCH=$ARCH makepkg --packagelist | xargs)
+
+      - name: 同步 docker 内外目录
+        # $PWD 在 docker 中被映射到 /github/workspace
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        run: |
+          sudo mkdir /github
+          sudo ln -s $PWD /github/workspace
+
+      - name: 复制文件以便上传
+        # rclone 没法指定多个文件
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        run: |
+          mkdir rclone-upload
+          cp ${{ steps.build.outputs.filelist }} rclone-upload/
+
+      - name: 把包上传到 OneDrive
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        uses: wei/rclone@v1.1.1
+        env:
+          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+        with:
+          # 21cn:repo-ng
+          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/
+
+      - name: 提交元信息到 Azure Blob 存储
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        uses: ./
+        with: 
+          azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
+          azure-blob-storage-container: repo
+          arch: ${{ steps.is-needed.outputs.arch }}
+          package-files: ${{ steps.build.outputs.filelist }}
+
   generate-build-info:
     runs-on: ubuntu-latest
     if: always()
     needs: 
       - buildAUR-pack
       - pkglist
+      - buildAUR-qemu-aarch64
     steps:
       - uses: actions/checkout@v1
 

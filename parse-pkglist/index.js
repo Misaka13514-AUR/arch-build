@@ -15,7 +15,8 @@ const out = {
             repo,
             arch: 'loongarch64'
         }))
-    ]
+    ],
+    'builds-on-aarch64': origin['aarch64-compile']
 }
 
 core.setOutput('pkglist', JSON.stringify(out))

@@ -21,7 +21,7 @@ const getPkgAttrMulti = (lines, attr) => {
 const getPkgAttr = (lines, attr) => getPkgAttrMulti(lines, attr).join('\n')
 
 
-const aurPackages = pkglist['builds-on-x86_64'].map(pkg => pkg.repo)
+const aurPackages = [...pkglist['builds-on-x86_64'].map(pkg => pkg.repo),...pkglist['aarch64-compile']]
 
 const res = {
     buildTime: new Date().toISOString(),
