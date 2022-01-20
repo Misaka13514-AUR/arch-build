@@ -75,6 +75,7 @@ x86_64:
   - slack-electron
   - smallpdf-desktop
   - storageexplorer
+  - sunloginclient
   - sway-launcher-desktop
   - trustedqsl
   - ttf-twemoji
@@ -104,6 +105,7 @@ aarch64-packonly:
   - electron12-bin
   - electron13-bin
   - pycharm-professional
+  - sunloginclient
   - visual-studio-code-bin
   - webstorm
   - wps-office-cn
