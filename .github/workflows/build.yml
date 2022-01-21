@@ -108,6 +108,7 @@ jobs:
           distro: archarm_latest
           githubToken: ${{ github.token }}
           dockerRunArgs: |
+            --privileged
             --volume "${PWD}:/github/workspace"
           install: |
             ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
