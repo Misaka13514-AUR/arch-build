@@ -126,7 +126,7 @@ jobs:
             COMPRESSZST=(zstd -19 -c -z -q --threads=0 -)' > /home/builder/.makepkg.conf
           run: |
             cd /github/workspace
-            yay -Syu
+            yay -Syu --noconfirm
             chmod 777 .
             sudo --set-home -u builder yay -Sa --noconfirm --useask --builddir=./ ${{ matrix.repo }}
             cd ${{ matrix.repo }}
