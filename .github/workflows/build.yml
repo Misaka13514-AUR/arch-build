@@ -127,6 +127,7 @@ jobs:
           run: |
             cd /github/workspace
             yay -Syu
+            chmod 777 .
             sudo --set-home -u builder yay -Sa --noconfirm --useask --builddir=./ ${{ matrix.repo }}
             cd ${{ matrix.repo }}
             echo ::set-output name=filelist::$(sudo --set-home -u builder CARCH=$ARCH makepkg --packagelist | xargs)
