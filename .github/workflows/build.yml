@@ -110,30 +110,29 @@ jobs:
           dockerRunArgs: |
             --privileged
             --volume "${PWD}:/github/workspace"
+            --credential yes
           install: |
             ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
             echo '[archlinuxcn]
             SigLevel = Never
-            Server = https://repo.archlinuxcn.org/aarch64
-            [Clansty]
-            SigLevel = Never
-            Server = https://repo.lwqwq.com/archlinux/aarch64' >> /etc/pacman.conf
+            Server = https://repo.archlinuxcn.org/aarch64' >> /etc/pacman.conf
             pacman-key --init
             pacman -Syu --noconfirm
-            pacman -S --noconfirm base-devel git yay-bin nodejs-lts-gallium jdk11-openjdk sudo
-            chown 0:0 /usr/sbin/sudo
-            chmod 4755 /usr/sbin/sudo
+            pacman -S --noconfirm base-devel git nodejs-lts-gallium jdk11-openjdk sudo
             useradd builder -m
             echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
             echo 'PACKAGER="Clansty <i@gao4.pw>"
             COMPRESSZST=(zstd -19 -c -z -q --threads=0 -)' > /home/builder/.makepkg.conf
           run: |
             cd /github/workspace
-            yay -Syu --noconfirm
-            chmod 777 .
-            sudo --set-home -u builder yay -Sa --noconfirm --useask --builddir=./ ${{ matrix.repo }}
+            pacman -Syu --noconfirm
+            git clone https://aur.archlinux.org/${{ matrix.repo }}.git
             cd ${{ matrix.repo }}
-            echo ::set-output name=filelist::$(sudo --set-home -u builder CARCH=$ARCH makepkg --packagelist | xargs)
+            source PKGBUILD
+            chmod -R a+rw .
+            pacman -S --noconfirm --needed --asdeps "${makedepends[@]}" "${depends[@]}"
+            sudo --set-home -u builder makepkg -sfA
+            echo ::set-output name=filelist::$(sudo --set-home -u builder makepkg --packagelist | xargs)
 
       - name: 同步 docker 内外目录
         # $PWD 在 docker 中被映射到 /github/workspace
