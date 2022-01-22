@@ -102,6 +102,7 @@ jobs:
           arch: aarch64
 
       - uses: uraimo/run-on-arch-action@v2.1.1
+        id: build
         name: 使用 docker 构建包
         with:
           arch: aarch64
