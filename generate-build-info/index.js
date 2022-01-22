@@ -21,7 +21,7 @@ const getPkgAttrMulti = (lines, attr) => {
 const getPkgAttr = (lines, attr) => getPkgAttrMulti(lines, attr).join('\n')
 
 
-const aurPackages = [...pkglist['builds-on-x86_64'].map(pkg => pkg.repo),...pkglist['builds-on-aarch64']]
+const aurPackages = [...pkglist['builds-on-x86_64'].map(pkg => pkg.repo), ...pkglist['builds-on-aarch64']]
 
 const res = {
     buildTime: new Date().toISOString(),
@@ -47,6 +47,7 @@ const processArch = (arch) => {
             conflicts: getPkgAttrMulti(lines, 'CONFLICTS'),
             buildTime: new Date(Number.parseInt(getPkgAttr(lines, 'BUILDDATE')) * 1000).toISOString(),
             isAur: aurPackages.includes(getPkgAttr(lines, 'BASE')),
+            filename: getPkgAttr(lines, 'FILENAME'),
         })
     }
 }
