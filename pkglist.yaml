@@ -44,6 +44,10 @@ x86_64:
   - loongarch64-linux-gnu-binutils
   - loongarch64-linux-gnu-linux-api-headers
   - marktext-bin
+  - mcpelauncher-linux-git
+  - mcpelauncher-msa-git
+  - mcpelauncher-msa-ui-qt-git
+  - mcpelauncher-ui-git
   - microsoft-edge-beta-bin
   - microsoft-edge-stable-bin
   - miredo
