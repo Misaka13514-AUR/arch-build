@@ -33,6 +33,7 @@ x86_64:
   - howdy
   - intellij-idea-ultimate-edition
   - jadx-gui-desktop
+  - jetbrains-gateway
   - kdisplay-kwinft
   - kwin-bismuth
   - kwinft
@@ -108,6 +109,7 @@ aarch64-packonly:
   - electron-bin
   - electron12-bin
   - electron13-bin
+  - jetbrains-gateway
   - pycharm-professional
   - sunloginclient
   - visual-studio-code-bin
