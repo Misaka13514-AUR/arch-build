@@ -3,6 +3,7 @@ x86_64:
   - altserver-bin
   - aria2-systemd
   - baidunetdisk-electron
+  - balena-etcher
   - bedup
   - chromaprint-fftw
   - clash-for-windows-bin
