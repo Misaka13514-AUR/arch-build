@@ -99,6 +99,7 @@ x86_64:
   - sway-launcher-desktop
   - texlive-full
   - trustedqsl
+  - ttf-all-the-icons
   - ttf-twemoji
   - ttf-twemoji-color
   - typora-free
