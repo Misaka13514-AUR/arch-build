@@ -9,6 +9,7 @@ x86_64:
   - clash-for-windows-bin
   - cloudflare-wrangler
   - code-server
+  - com.tencent.weixin
   - cosbrowser
   - ctcontainer
   - cydia-impactor
