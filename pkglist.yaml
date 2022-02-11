@@ -122,6 +122,14 @@ x86_64:
   - xavs2
   - yesplaymusic
   - yesplaymusic-electron
+  - zfs-dkms
+  - zfs-linux
+  - zfs-linux-headers
+  - zfs-linux-lts
+  - zfs-linux-lts-headers
+  - zfs-linux-zen
+  - zfs-linux-zen-headers
+  - zfs-utils
 
 aarch64-packonly: 
   - electron-bin
