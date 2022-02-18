@@ -120,6 +120,7 @@ x86_64:
   - wxgtk2.8
   - xavs
   - xavs2
+  - 
   - yesplaymusic
   - yesplaymusic-electron
   - zfs-dkms
