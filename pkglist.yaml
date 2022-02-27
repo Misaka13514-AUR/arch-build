@@ -7,6 +7,12 @@ x86_64:
   - bedup
   - chromaprint-fftw
   - clash-for-windows-bin
+  - clash-for-windows-electron-bin
+  - clash-geoip
+  - clash-premium-bin
+  - clash-premium-tun
+  - clash-tun
+  - clash-user
   - cloudflare-wrangler
   - code-server
   - com.tencent.weixin
