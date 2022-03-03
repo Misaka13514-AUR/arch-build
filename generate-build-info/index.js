@@ -56,4 +56,4 @@ for (arch of ['x86_64', 'i686', 'aarch64', 'loongarch64']) {
     processArch(arch)
 }
 
-fs.writeFileSync('build-info.json', JSON.stringify(res, null, 2), 'utf-8')
+fs.writeFileSync('build-info.json', JSON.stringify(res, null, 0), 'utf-8')
