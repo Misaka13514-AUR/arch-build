@@ -132,11 +132,8 @@ x86_64:
   - yesplaymusic-electron
   - zfs-dkms
   - zfs-linux
-  - zfs-linux-headers
   - zfs-linux-lts
-  - zfs-linux-lts-headers
   - zfs-linux-zen
-  - zfs-linux-zen-headers
   - zfs-utils
 
 aarch64-packonly: 
