@@ -61,10 +61,10 @@ runs:
             cp "$TEMP_DB_FILE" "$TEMP_DB_FILE_DOT_FILES"
             docker run --rm -v "$TEMP_DB_FILE_DIRECTORY":/repo -v "/github/workspace":"/github/workspace" archlinux:latest bash -c 'repo-add /repo/*.db.tar.gz ${{ inputs.package-files }}'
             sudo chown -R $(id -u):$(id -g) "$TEMP_DB_FILE_DIRECTORY"
-            rm "$TEMP_DB_FILE"
+            rm "$TEMP_DB_FILE_DOT_FILES"
 
             echo "Try upload new database file"
-            if ! UPLOAD_OUTPUT="$(az storage blob upload --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --file "$TEMP_DB_FILE_DOT_FILES" --name "$TARGET_PATH" --content-cache "$CACHE_CONTROL_DATABASE_FILE" "${UPLOAD_CONDITION[@]}" 2>&1)"; then
+            if ! UPLOAD_OUTPUT="$(az storage blob upload --connection-string "$AZURE_BLOB_STORAGE_CONNECTION_STRING" --container-name "$AZURE_BLOB_STORAGE_CONTAINER" --file "$TEMP_DB_FILE" --name "$TARGET_PATH" --content-cache "$CACHE_CONTROL_DATABASE_FILE" "${UPLOAD_CONDITION[@]}" 2>&1)"; then
                 if ! echo "$UPLOAD_OUTPUT" | grep 'ConditionNotMet\|BlobAlreadyExists'; then
                     echo "Unknown error when uploading new database file: $UPLOAD_OUTPUT"
                     exit 1
