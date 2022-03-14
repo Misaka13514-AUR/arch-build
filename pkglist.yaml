@@ -137,6 +137,9 @@ x86_64:
   - zfs-linux-zen
   - zfs-utils
 
+i686:
+  - yay
+
 aarch64-packonly: 
   - electron-bin
   - electron12-bin

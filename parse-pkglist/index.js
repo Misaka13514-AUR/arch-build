@@ -7,6 +7,10 @@ const out = {
             repo,
             arch: 'x86_64'
         })),
+        ...origin.x86_64.map(repo => ({
+            repo,
+            arch: 'i686'
+        })),
         ...origin['aarch64-packonly'].map(repo => ({
             repo,
             arch: 'aarch64'
