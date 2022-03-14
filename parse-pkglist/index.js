@@ -7,7 +7,7 @@ const out = {
             repo,
             arch: 'x86_64'
         })),
-        ...origin.x86_64.map(repo => ({
+        ...origin.i686.map(repo => ({
             repo,
             arch: 'i686'
         })),
