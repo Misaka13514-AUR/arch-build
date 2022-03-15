@@ -116,6 +116,7 @@ x86_64:
   - uavs3d-git
   - usbfluxd
   - uuid
+  - uwufetch
   - visual-paradigm
   - visual-paradigm-community
   - visual-studio-code-bin
