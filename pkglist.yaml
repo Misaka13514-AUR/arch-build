@@ -142,11 +142,11 @@ x86_64:
 
 i686:
   - ./pkgbuilds/i686/limine
+  - ./pkgbuilds/i686/mongodb
   - clash-premium-bin
   - electron-bin
   - frp
   - frp-bin
-  - mongodb
   - mongodb-tools
   - netatalk
   - yay
