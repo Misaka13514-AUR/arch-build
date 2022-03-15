@@ -22,7 +22,10 @@ runs:
 
     - name: 下载 PKGBUILD
       shell: bash
-      run: wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=${{ inputs.package-name }} -O PKGBUILD
+      run: |
+        if [[ ${{ inputs.package-name }} == ./* ]];then
+          wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=${{ inputs.package-name }} -O PKGBUILD
+        fi
 
     - name: 下载并解压仓库数据库
       shell: bash
@@ -34,7 +37,11 @@ runs:
       shell: bash
       id: get-name
       run: |
-        source PKGBUILD
+        if [[ ${{ inputs.package-name }} == ./* ]];then
+          source ${{ inputs.package-name }}/PKGBUILD
+        else
+          source PKGBUILD
+        fi
         echo ::set-output name=pkgname::$pkgname
         echo ::set-output name=pkgver::$pkgver
         echo ::set-output name=pkgrel::$pkgrel
