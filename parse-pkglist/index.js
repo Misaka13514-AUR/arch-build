@@ -7,10 +7,6 @@ const out = {
             repo,
             arch: 'i686'
         })),
-        // ...origin.x86_64.map(repo => ({
-        //     repo,
-        //     arch: 'x86_64'
-        // })),
         ...origin['aarch64-packonly'].map(repo => ({
             repo,
             arch: 'aarch64'
@@ -20,7 +16,8 @@ const out = {
             arch: 'loongarch64'
         }))
     ],
-    'builds-on-aarch64': origin['aarch64-compile']
+    'builds-on-aarch64': origin['aarch64-compile'],
+    'builds-on-i686': origin.i686
 }
 
 core.setOutput('pkglist', JSON.stringify(out))
