@@ -99,7 +99,7 @@ jobs:
         uses: ./check-is-needed
         with: 
           package-name: ${{ matrix.repo }}
-          arch: ${{ matrix.arch }}
+          arch: i686
 
       - name: 使用 Docker 构建包
         id: build
@@ -230,6 +230,7 @@ jobs:
     needs: 
       - buildAUR-pack
       - buildAUR-qemu-aarch64
+      - buildAUR-i686
       - pkglist
     steps:
       - uses: actions/checkout@v1
