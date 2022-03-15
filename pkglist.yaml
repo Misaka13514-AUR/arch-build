@@ -139,9 +139,15 @@ x86_64:
   - zfs-utils
 
 i686:
+  - clash-premium-bin
+  - electron-bin
+  - frp
+  - frp-bin
+  - limine
+  - netatalk
   - yay
 
-aarch64-packonly: 
+aarch64-packonly:
   - electron-bin
   - electron12-bin
   - electron13-bin
@@ -153,7 +159,7 @@ aarch64-packonly:
   - wps-office-cn
   - yay-bin
 
-aarch64-compile: 
+aarch64-compile:
   - code-server
   - xrdp
 
