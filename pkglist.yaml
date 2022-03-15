@@ -76,6 +76,7 @@ x86_64:
   - microsoft-edge-stable-bin
   - miredo
   - mkinitcpio-transflag
+  - mongodb
   - mongodb-bin
   - mongodb-compass
   - mongodb-tools-bin
@@ -152,6 +153,7 @@ aarch64-packonly:
   - electron12-bin
   - electron13-bin
   - jetbrains-gateway
+  - mongodb
   - pycharm-professional
   - sunloginclient
   - visual-studio-code-bin
