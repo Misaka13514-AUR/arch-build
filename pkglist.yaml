@@ -79,6 +79,7 @@ x86_64:
   - mongodb
   - mongodb-bin
   - mongodb-compass
+  - mongodb-tools
   - mongodb-tools-bin
   - musikcube
   - nodejs-http-server
@@ -140,11 +141,13 @@ x86_64:
   - zfs-utils
 
 i686:
+  - ./pkgbuilds/i686/limine
   - clash-premium-bin
   - electron-bin
   - frp
   - frp-bin
-  - ./pkgbuilds/i686/limine
+  - mongodb
+  - mongodb-tools
   - netatalk
   - yay
 
