@@ -164,6 +164,7 @@ jobs:
           arch: aarch64
 
       - uses: uraimo/run-on-arch-action@v2.1.1
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         id: build
         name: 使用 docker 构建包
         with:
@@ -188,7 +189,9 @@ jobs:
           run: |
             cd /github/workspace
             pacman -Syu --noconfirm
-            git clone https://aur.archlinux.org/${{ matrix.repo }}.git
+            if [[ ${{ matrix.repo }} != ./* ]];then
+              git clone https://aur.archlinux.org/${{ matrix.repo }}.git
+            fi # 否则为本地包
             cd ${{ matrix.repo }}
             source PKGBUILD
             chmod -R a+rw .
