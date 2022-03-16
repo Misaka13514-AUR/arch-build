@@ -10,24 +10,20 @@ makedepends=(yarn python2)
 source=(
   "$pkgname-$pkgver-user.service::https://raw.githubusercontent.com/cdr/code-server/v$pkgver/ci/build/code-server-user.service"
   "$pkgname-$pkgver@.service::https://raw.githubusercontent.com/cdr/code-server/v$pkgver/ci/build/code-server@.service"
-  "$pkgname-$pkgver.zip::https://github.com/coder/code-server/suites/5526335257/artifacts/177498225"
+  "$pkgname-$pkgver.tar.gz::https://registry.npmjs.com/code-server/-/code-server-4.1.0.tgz"
 )
 sha512sums=('7040df09c7404a56dbbb32e09d04ead3b622773520feae19c6710656cef46ca5d79b1972bfebb931e309e495d041b9938cd6a51c39fc0f8f6133dfe711be9280'
             'ab8e679c05f6184f163dccf0651e8c1fac22a29ae583148f8c93b6930ece27cdff45a48b425e8b15b8c8ce749015680a3ae8225b7e8037979ff3d228f396f629'
             'SKIP')
 
-prepare() {
-  tar -xzf package.tar.gz
-}
-
 build() {
-  cd release
+  cd package
   FORCE_NODE_VERSION=17 ELECTRON_SKIP_BINARY_DOWNLOAD=1 yarn install --production
 }
 
 package() {
   mkdir -p "$pkgdir/usr/lib"
-  cp -a release "$pkgdir/usr/lib/$pkgname"
+  cp -a package "$pkgdir/usr/lib/$pkgname"
 
   mkdir -p "$pkgdir/usr/bin"
   ln -s "/usr/lib/$pkgname/out/node/entry.js" "$pkgdir/usr/bin/$pkgname"
@@ -39,5 +35,5 @@ package() {
   cp -aL "$pkgname-$pkgver-user.service" "$pkgdir/usr/lib/systemd/user/$pkgname.service"
 
   mkdir -p "$pkgdir/usr/share/licenses"
-  cp -a "release/LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname"
+  cp -a "package/LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname"
 }
