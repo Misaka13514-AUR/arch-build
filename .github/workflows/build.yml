@@ -66,12 +66,14 @@ jobs:
           cp ${{ steps.build.outputs.filelist }} rclone-upload/
 
       - uses: NiceLabs/rclone-action@master
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
           github-token: ${{ secrets.SECRET_TOKEN }}
           config: ${{ secrets.RCLONE_CONF }}
           config-secret-name: RCLONE_CONF
 
       - name: 把包上传到 OneDrive
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
 
       - name: 提交元信息到 Azure Blob 存储
@@ -124,12 +126,14 @@ jobs:
           cp ${{ steps.build.outputs.filelist }} rclone-upload/
 
       - uses: NiceLabs/rclone-action@master
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
           github-token: ${{ secrets.SECRET_TOKEN }}
           config: ${{ secrets.RCLONE_CONF }}
           config-secret-name: RCLONE_CONF
 
       - name: 把包上传到 OneDrive
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
 
       - name: 提交元信息到 Azure Blob 存储
@@ -207,12 +211,14 @@ jobs:
           cp ${{ steps.build.outputs.filelist }} rclone-upload/
 
       - uses: NiceLabs/rclone-action@master
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
           github-token: ${{ secrets.SECRET_TOKEN }}
           config: ${{ secrets.RCLONE_CONF }}
           config-secret-name: RCLONE_CONF
 
       - name: 把包上传到 OneDrive
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
 
       - name: 提交元信息到 Azure Blob 存储
