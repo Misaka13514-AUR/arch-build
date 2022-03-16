@@ -5,7 +5,7 @@ pkgdesc="VS Code in the browser"
 arch=("x86_64" "aarch64" "pentium4" "i686" "loongarch64")
 url="https://github.com/cdr/code-server"
 license=(MIT)
-depends=(glibc "nodejs>=14")
+depends=(glibc nodejs)
 makedepends=(yarn python2)
 source=(
   "$pkgname-$pkgver-user.service::https://raw.githubusercontent.com/cdr/code-server/v$pkgver/ci/build/code-server-user.service"
