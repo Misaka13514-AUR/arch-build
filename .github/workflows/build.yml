@@ -65,14 +65,14 @@ jobs:
           mkdir rclone-upload
           cp ${{ steps.build.outputs.filelist }} rclone-upload/
 
-      - name: 把包上传到 OneDrive
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        uses: wei/rclone@v1.1.1
-        env:
-          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+      - uses: NiceLabs/rclone-action@master
         with:
-          # 21cn:repo-ng
-          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/
+          github-token: ${{ secrets.SECRET_TOKEN }}
+          config: ${{ secrets.RCLONE_CONF }}
+          config-secret-name: RCLONE_CONF
+
+      - name: 把包上传到 OneDrive
+        run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
 
       - name: 提交元信息到 Azure Blob 存储
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
@@ -123,14 +123,14 @@ jobs:
           mkdir rclone-upload
           cp ${{ steps.build.outputs.filelist }} rclone-upload/
 
-      - name: 把包上传到 OneDrive
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        uses: wei/rclone@v1.1.1
-        env:
-          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+      - uses: NiceLabs/rclone-action@master
         with:
-          # 21cn:repo-ng
-          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/
+          github-token: ${{ secrets.SECRET_TOKEN }}
+          config: ${{ secrets.RCLONE_CONF }}
+          config-secret-name: RCLONE_CONF
+
+      - name: 把包上传到 OneDrive
+        run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
 
       - name: 提交元信息到 Azure Blob 存储
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
@@ -206,14 +206,14 @@ jobs:
           mkdir rclone-upload
           cp ${{ steps.build.outputs.filelist }} rclone-upload/
 
-      - name: 把包上传到 OneDrive
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        uses: wei/rclone@v1.1.1
-        env:
-          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+      - uses: NiceLabs/rclone-action@master
         with:
-          # 21cn:repo-ng
-          args: copy rclone-upload/ ${{ secrets.REPO_PATH }}/
+          github-token: ${{ secrets.SECRET_TOKEN }}
+          config: ${{ secrets.RCLONE_CONF }}
+          config-secret-name: RCLONE_CONF
+
+      - name: 把包上传到 OneDrive
+        run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
 
       - name: 提交元信息到 Azure Blob 存储
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}

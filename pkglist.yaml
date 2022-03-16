@@ -142,7 +142,6 @@ x86_64:
 
 i686:
   - ./pkgbuilds/i686/limine
-  - ./pkgbuilds/i686/mongodb
   - clash-premium-bin
   - electron-bin
   - frp
@@ -169,3 +168,5 @@ aarch64-compile:
   - xrdp
 
 loongarch64-packonly: []
+
+loongarch64-compile: []
