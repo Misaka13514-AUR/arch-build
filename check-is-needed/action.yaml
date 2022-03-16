@@ -43,6 +43,7 @@ runs:
           source PKGBUILD
         fi
         echo ::set-output name=pkgname::$pkgname
+        echo ::set-output name=pkgbase::$pkgbase
         echo ::set-output name=pkgver::$pkgver
         echo ::set-output name=pkgrel::$pkgrel
         echo ::set-output name=epoch::$epoch
@@ -54,6 +55,7 @@ runs:
       id: check-db
       env:
         PKGNAME: ${{ steps.get-name.outputs.pkgname }}
+        PKGBASE: ${{ steps.get-name.outputs.pkgbase }}
         PKGVER: ${{ steps.get-name.outputs.pkgver }}
         PKGREL: ${{ steps.get-name.outputs.pkgrel }}
         EPOCH: ${{ steps.get-name.outputs.epoch }}

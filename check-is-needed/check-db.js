@@ -1,9 +1,10 @@
 const fs = require('fs')
 const path = require('path')
 const subdirs = fs.readdirSync('pkgdb')
-const { PKGNAME, PKGVER, PKGREL, EPOCH, ARCH, ARCHIN } = process.env
+const { PKGNAME, PKGBASE, PKGVER, PKGREL, EPOCH, ARCH, ARCHIN } = process.env
 const newVer = `${EPOCH ? EPOCH + ':' : ''}${PKGVER}-${PKGREL}`
-console.log(`包名称: ${PKGNAME}
+const pkgName = PKGBASE || PKGNAME
+console.log(`包名称: ${pkgName}
 目标版本: ${newVer}`)
 
 // 计算一下 arch
@@ -23,7 +24,7 @@ for (const subdir of subdirs) {
         continue
     }
     const thisBase = lines[indexOfBase + 1]
-    if (thisBase !== PKGNAME) continue
+    if (thisBase !== pkgName) continue
     // 以下内容为找到包时发生
     const indexOfVersion = lines.indexOf('%VERSION%')
     if (indexOfVersion < 0) {
@@ -32,7 +33,7 @@ for (const subdir of subdirs) {
     }
     const thisVersion = lines[indexOfVersion + 1]
     if (newVer === thisVersion) {
-        console.log(`::notice::包 ${PKGNAME} 已是最新，无需构建
+        console.log(`::notice::包 ${pkgName} 已是最新，无需构建
 ::set-output name=is-needed::false`)
         return
     }
@@ -44,10 +45,10 @@ for (const subdir of subdirs) {
     else {
         console.log(`::set-output name=old-package-name::${lines[indexOfFilename + 1]}`)
     }
-    console.log(`::notice::包 ${PKGNAME} 过期，需要构建
+    console.log(`::notice::包 ${pkgName} 过期，需要构建
 ::set-output name=is-needed::true`)
     return
 }
 // 包不存在
-console.log(`::notice::包 ${PKGNAME} 不存在，需要构建
+console.log(`::notice::包 ${pkgName} 不存在，需要构建
 ::set-output name=is-needed::true`)
