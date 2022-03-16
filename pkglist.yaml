@@ -141,7 +141,6 @@ x86_64:
   - zfs-utils
 
 i686:
-  - ./pkgbuilds/universal/code-server
   - ./pkgbuilds/i686/limine
   - clash-premium-bin
   - electron-bin
