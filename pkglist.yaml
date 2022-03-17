@@ -29,6 +29,7 @@ x86_64:
   - deepin-wine5
   - deepin-wine6-stable
   - deepin-wine6-stable
+  - ddns-go-bin
   - discord_arch_electron
   - disman-kwinft
   - droidcam
@@ -139,6 +140,7 @@ x86_64:
 i686:
   - ./pkgbuilds/i686/limine
   - clash-premium-bin
+  - ddns-go-bin
   - electron-bin
   - frp
   - frp-bin
@@ -147,6 +149,7 @@ i686:
   - yay
 
 aarch64-packonly:
+  - ddns-go-bin
   - electron-bin
   - electron12-bin
   - electron13-bin
