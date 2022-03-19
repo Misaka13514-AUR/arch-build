@@ -42,6 +42,7 @@ jobs:
         with: 
           package-name: ${{ matrix.repo }}
           arch: ${{ matrix.arch }}
+          container: repo
 
       - name: 使用 yay 构建包
         id: build
@@ -102,6 +103,7 @@ jobs:
         with: 
           package-name: ${{ matrix.repo }}
           arch: i686
+          container: repo
 
       - name: 使用 Docker 构建包
         id: build
@@ -162,6 +164,7 @@ jobs:
         with: 
           package-name: ${{ matrix.repo }}
           arch: loongarch64
+          container: repo
 
       - name: 构建包
         id: build
@@ -223,6 +226,7 @@ jobs:
         with: 
           package-name: ${{ matrix.repo }}
           arch: aarch64
+          container: repo
 
       - uses: uraimo/run-on-arch-action@v2.1.1
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
