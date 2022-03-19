@@ -175,7 +175,8 @@ jobs:
       - name: 同步容器内外目录
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: |
-          sudo ln -s /loongarch64-root/home/builder /home/builder
+          sudo mkdir /home/builder
+          sudo mount --bind /loongarch64-root/home/builder /home/builder
           sudo chmod 777 /loongarch64-root/home/builder
 
       - name: 复制文件以便上传
