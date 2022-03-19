@@ -208,6 +208,73 @@ jobs:
           arch: ${{ steps.is-needed.outputs.arch }}
           package-files: ${{ steps.build.outputs.filelist }}
 
+  build-arch-official-loongarch64:
+    # 不是 any 的包，自己构建一下
+    runs-on: ubuntu-latest
+    needs:
+      - pkglist
+    strategy:
+      matrix:
+        repo: ${{ fromJSON(needs.pkglist.outputs.data).arch-official-loongarch64 }}
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: clone git 仓库
+        run: |
+          git clone --depth 1 -b packages/${{ matrix.repo }} https://github.com/archlinux/svntogit-packages.git ${{ matrix.repo }}
+
+      - name: 检查包是否已存在
+        id: is-needed
+        uses: ./check-is-needed
+        with: 
+          package-name: ./${{ matrix.repo }}/repos/core-x86_64
+          arch: loongarch64
+          container: repo
+
+      - name: 构建包
+        id: build
+        uses: Clansty/build-aur-action-loongarch64@main
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        with:
+          repo-name: ./${{ matrix.repo }}/repos/core-x86_64
+          arch: loongarch64
+          packager: Clansty <i@gao4.pw>
+
+      - name: 同步容器内外目录
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        run: |
+          sudo mkdir /home/builder
+          sudo mount --bind /loongarch64-root/home/builder /home/builder
+          sudo chmod 777 /loongarch64-root/home/builder
+
+      - name: 复制文件以便上传
+        # rclone 没法指定多个文件
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        run: |
+          mkdir rclone-upload
+          cp ${{ steps.build.outputs.filelist }} rclone-upload/
+
+      - uses: NiceLabs/rclone-action@master
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        with:
+          github-token: ${{ secrets.SECRET_TOKEN }}
+          config: ${{ secrets.RCLONE_CONF }}
+          config-secret-name: RCLONE_CONF
+
+      - name: 把包上传到 OneDrive
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
+
+      - name: 提交元信息到 Azure Blob 存储
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        uses: ./
+        with: 
+          azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
+          azure-blob-storage-container: repo
+          arch: loongarch64
+          package-files: ${{ steps.build.outputs.filelist }}
+
   buildAUR-qemu-aarch64:
     runs-on: ubuntu-latest
     needs:

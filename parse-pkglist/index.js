@@ -19,6 +19,7 @@ const out = {
     'builds-on-aarch64': origin['aarch64-compile'],
     'builds-on-i686': origin.i686,
     'builds-on-loongarch64': origin['loongarch64-compile'],
+    'arch-official-loongarch64': origin['arch-official-loongarch64'],
 }
 
 core.setOutput('pkglist', JSON.stringify(out))
