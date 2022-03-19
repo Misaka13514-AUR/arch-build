@@ -17,7 +17,8 @@ const out = {
         }))
     ],
     'builds-on-aarch64': origin['aarch64-compile'],
-    'builds-on-i686': origin.i686
+    'builds-on-i686': origin.i686,
+    'builds-on-loongarch64': origin['loongarch64-compile'],
 }
 
 core.setOutput('pkglist', JSON.stringify(out))
