@@ -18,13 +18,11 @@ jobs:
       - name: 下载并解压仓库数据库
         run: |
           mkdir pkgdb
-          wget https://mirror.rackspace.com/archlinux/core/os/x86_64/core.db.tar.gz && tar -xzf files.tar.gz -C pkgdb || echo '仓库数据库不存在'
+          wget https://mirror.rackspace.com/archlinux/core/os/x86_64/core.db.tar.gz && tar -xzf core.db.tar.gz -C pkgdb || echo '仓库数据库不存在'
 
       - name: 解析包信息
         uses: ./parse-archlinux-repo
         id: parse
-
-      - run: echo '${{ steps.parse.outputs.data }}'
 
   build:
     # 不是 any 的包，自己构建一下
