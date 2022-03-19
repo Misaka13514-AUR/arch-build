@@ -163,6 +163,9 @@ jobs:
           package-name: ${{ matrix.repo }}
           arch: loongarch64
 
+      - name: Setup binfmt
+        run: sudo bash -c 'echo ":qemu-loongarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x02\x01:\xff\xff\xff\xff\xff\xfe\xfe\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/local/bin/qemu-loongarch64:" > /proc/sys/fs/binfmt_misc/register'
+
       - name: 使用 Docker 构建包
         id: build
         uses: Clansty/build-aur-action-loongarch64@main
