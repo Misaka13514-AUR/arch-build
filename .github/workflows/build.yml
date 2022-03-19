@@ -172,6 +172,11 @@ jobs:
           arch: loongarch64
           packager: Clansty <i@gao4.pw>
 
+      - name: 同步容器内外目录
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        run: |
+          sudo ln -s /loongarch64-root/home/builder /home/builder
+
       - name: 复制文件以便上传
         # rclone 没法指定多个文件
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
