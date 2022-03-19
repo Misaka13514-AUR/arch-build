@@ -1,8 +1,8 @@
 const fs = require('fs')
 const path = require('path')
 const subdirs = fs.readdirSync('pkgdb')
-const { PKGNAME, PKGBASE, PKGVER, PKGREL, EPOCH, ARCH, ARCHIN } = process.env
-const newVer = `${EPOCH ? EPOCH + ':' : ''}${PKGVER}-${PKGREL}`
+const { PKGNAME, PKGBASE, PKGVER, PKGREL, EPOCH, ARCH, ARCHIN, VERSION } = process.env
+const newVer = VERSION || `${EPOCH ? EPOCH + ':' : ''}${PKGVER}-${PKGREL}`
 const pkgName = PKGBASE || PKGNAME
 console.log(`包名称: ${pkgName}
 目标版本: ${newVer}`)

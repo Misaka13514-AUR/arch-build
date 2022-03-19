@@ -1,7 +1,6 @@
 name: 构建 loongarch64 core 软件源
 
 on:
-  push:
   schedule:
     - cron:  '1 */8 * * *'
   workflow_dispatch:
@@ -116,9 +115,7 @@ jobs:
         env:
           PKGNAME: ${{ matrix.pkgname }}
           PKGBASE: ${{ matrix.pkgbase }}
-          PKGVER: ${{ matrix.pkgver }}
-          PKGREL: ${{ matrix.pkgrel }}
-          EPOCH: ${{ matrix.epoch }}
+          VERSION: ${{ matrix.version }}
           ARCH: ${{ matrix.arch }}
           ARCHIN: loongarch64
 

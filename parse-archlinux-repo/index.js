@@ -29,11 +29,9 @@ for (const subdir of subdirs) {
     const lines = content.split('\n')
     if (getPkgAttr(lines, 'ARCH') === 'any') {
         resAny.push({
-            pkgname: getPkgAttr(lines, 'PKGNAME'),
-            pkgbase: getPkgAttr(lines, 'PKGBASE'),
-            pkgver: getPkgAttr(lines, 'PKGVER'),
-            pkgrel: getPkgAttr(lines, 'PKGREL'),
-            epoch: getPkgAttr(lines, 'EPOCH'),
+            pkgname: getPkgAttr(lines, 'NAME'),
+            pkgbase: getPkgAttr(lines, 'BASE'),
+            version: getPkgAttr(lines, 'VERSION'),
             arch: getPkgAttr(lines, 'ARCH'),
             filename: getPkgAttr(lines, 'FILENAME'),
         })
