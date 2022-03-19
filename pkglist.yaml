@@ -1,6 +1,7 @@
 x86_64:
   # 一个 PKGBASE 一行，包含 PKGBASE 中所有的包
   - ./pkgbuilds/universal/code-server
+  - ./pkgbuilds/universal/uwufetch
   - altserver-bin
   - aria2-systemd
   - baidunetdisk-electron
@@ -118,7 +119,6 @@ x86_64:
   - uavs3d-git
   - usbfluxd
   - uuid
-  - uwufetch
   - visual-paradigm
   - visual-paradigm-community
   - visual-studio-code-bin
@@ -142,6 +142,7 @@ x86_64:
 
 i686:
   - ./pkgbuilds/i686/limine
+  - ./pkgbuilds/universal/uwufetch
   - clash-premium-bin
   - electron-bin
   - frp
@@ -165,9 +166,11 @@ aarch64-packonly:
 
 aarch64-compile:
   - ./pkgbuilds/universal/code-server
+  - ./pkgbuilds/universal/uwufetch
   - xrdp
 
 loongarch64-packonly: []
 
 loongarch64-compile: 
   - ./pkgbuilds/universal/code-server
+  - ./pkgbuilds/universal/uwufetch
