@@ -24,6 +24,8 @@ jobs:
         uses: ./parse-archlinux-repo
         id: parse
 
+      - run: echo '${{ steps.parse.outputs.data }}'
+
   build:
     # 不是 any 的包，自己构建一下
     runs-on: ubuntu-latest

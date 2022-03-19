@@ -43,6 +43,11 @@ for (const subdir of subdirs) {
     }
 }
 
+console.log({
+    pkglist: res,
+    anylist: resAny,
+})
+
 core.setOutput('data', {
     pkglist: res,
     anylist: resAny,
