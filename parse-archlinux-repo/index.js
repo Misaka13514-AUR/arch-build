@@ -19,7 +19,7 @@ const getPkgAttrMulti = (lines, attr) => {
 // 获取一个属性，可以是多行的
 const getPkgAttr = (lines, attr) => getPkgAttrMulti(lines, attr).join('\n')
 
-const res = []
+const res = new Set()
 const resAny = []
 
 const subdirs = fs.readdirSync('pkgdb')
@@ -39,11 +39,11 @@ for (const subdir of subdirs) {
         })
     }
     else {
-        res.push(getPkgAttr(lines, 'BASE'))
+        res.add(getPkgAttr(lines, 'BASE'))
     }
 }
 
 core.setOutput('data', {
-    pkglist: res,
+    pkglist: Array.from(res),
     anylist: resAny,
 })
