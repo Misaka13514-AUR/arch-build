@@ -165,7 +165,7 @@ jobs:
 
       - name: 使用 Docker 构建包
         id: build
-        uses: archlinux-loongarch64/build-aur-action-loongarch64@main
+        uses: Clansty/build-aur-action-loongarch64@main
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
           repo-name: ${{ matrix.repo }}
