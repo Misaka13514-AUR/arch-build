@@ -151,7 +151,7 @@ jobs:
       - pkglist
     strategy:
       matrix:
-        repo: ${{ fromJSON(needs.pkglist.outputs.data).builds-on-i686 }}
+        repo: ${{ fromJSON(needs.pkglist.outputs.data).builds-on-loongarch64 }}
       fail-fast: false
     steps:
       - uses: actions/checkout@v1
@@ -301,6 +301,7 @@ jobs:
       - buildAUR-pack
       - buildAUR-qemu-aarch64
       - buildAUR-i686
+      - buildAUR-loongarch64
       - pkglist
     steps:
       - uses: actions/checkout@v1
