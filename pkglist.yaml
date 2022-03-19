@@ -171,5 +171,5 @@ aarch64-compile:
 loongarch64-packonly: []
 
 loongarch64-compile: 
-  - ./pkgbuilds/universal/code-server
+  # - ./pkgbuilds/universal/code-server # yarn 没有
   - ./pkgbuilds/universal/uwufetch
