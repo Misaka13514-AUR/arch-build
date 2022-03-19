@@ -43,5 +43,7 @@ for (const subdir of subdirs) {
     }
 }
 
-core.setOutput('pkglist', res)
-core.setOutput('anylist', resAny)
+core.setOutput('data', {
+    pkglist: res,
+    anylist: resAny,
+})

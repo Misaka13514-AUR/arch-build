@@ -1,9 +1,7 @@
 name: 解析包信息
 outputs:
-  pkglist:
-    description: packages to build
-  anylist:
-    description: arch=any packages
+  data:
+    description: the data
 runs:
   using: 'node12'
   main: 'index.js'

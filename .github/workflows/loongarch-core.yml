@@ -11,8 +11,7 @@ jobs:
   pkglist:
     runs-on: ubuntu-latest
     outputs:
-      pkglist: ${{ steps.parse.outputs.pkglist }}
-      anylist: ${{ steps.parse.outputs.anylist }}
+      data: ${{ steps.parse.outputs.data }}
     steps:
       - uses: actions/checkout@v1
 
@@ -32,7 +31,7 @@ jobs:
       - pkglist
     strategy:
       matrix:
-        repo: ${{ fromJSON(needs.pkglist.outputs.pkglist) }}
+        repo: ${{ fromJSON(needs.pkglist.outputs.data).pkglist }}
       fail-fast: false
     steps:
       - uses: actions/checkout@v1
@@ -100,7 +99,7 @@ jobs:
       - pkglist
     strategy:
       matrix:
-        include: ${{ fromJSON(needs.pkglist.outputs.anylist) }}
+        include: ${{ fromJSON(needs.pkglist.outputs.data).anylist }}
       fail-fast: false
     steps:
       - uses: actions/checkout@v1
