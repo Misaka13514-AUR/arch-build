@@ -39,13 +39,12 @@ jobs:
       - name: clone git 仓库
         run: |
           git clone --depth 1 -b packages/${{ matrix.repo }} https://github.com/archlinux/svntogit-packages.git ${{ matrix.repo }}
-          cd ${{ matrix.repo }}
 
       - name: 检查包是否已存在
         id: is-needed
         uses: ./check-is-needed
         with: 
-          package-name: ./${{ matrix.repo }}
+          package-name: ./${{ matrix.repo }}/repos/core-x86_64
           arch: loongarch64
           container: loongarch
 
@@ -54,7 +53,7 @@ jobs:
         uses: Clansty/build-aur-action-loongarch64@main
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
-          repo-name: ./${{ matrix.repo }}
+          repo-name: ./${{ matrix.repo }}/repos/core-x86_64
           arch: loongarch64
           packager: Clansty <i@gao4.pw>
 
