@@ -30,6 +30,7 @@ x86_64:
   - deepin-wine5
   - deepin-wine6-stable
   - deepin-wine6-stable
+  - ddns-go-bin
   - discord_arch_electron
   - disman-kwinft
   - droidcam
@@ -46,19 +47,15 @@ x86_64:
   - jetbrains-gateway
   - kdisplay-kwinft
   - kwin-bismuth
-  - kwinft
   - layan-cursor-theme-git
   - lensfun-git
   - lib32-avahi
   - lib32-gd
   - lib32-gdbm
-  - lib32-kmod
   - lib32-libgphoto2
   - lib32-libheif
-  - lib32-libieee1284
   - lib32-libraqm
   - lib32-libxpm
-  - lib32-net-snmp
   - lib32-pciutils
   - lib32-poppler
   - lib32-sane
@@ -144,6 +141,7 @@ i686:
   - ./pkgbuilds/i686/limine
   - ./pkgbuilds/universal/uwufetch
   - clash-premium-bin
+  - ddns-go-bin
   - electron-bin
   - frp
   - frp-bin
@@ -152,6 +150,7 @@ i686:
   - yay
 
 aarch64-packonly:
+  - ddns-go-bin
   - electron-bin
   - electron12-bin
   - electron13-bin
