@@ -60,6 +60,7 @@ x86_64:
   - lib32-pciutils
   - lib32-poppler
   - lib32-sane
+  - libffi-static
   - libklvanc-git
   - libldap24
   - librist
