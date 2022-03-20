@@ -228,7 +228,7 @@ jobs:
         id: is-needed
         uses: ./check-is-needed
         with: 
-          package-name: ./${{ matrix.repo }}/repos/core-x86_64
+          package-name: ./${{ matrix.repo }}/repos/*-x86_64
           arch: loongarch64
           container: repo
 
@@ -237,7 +237,7 @@ jobs:
         uses: Clansty/build-aur-action-loongarch64@main
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
-          repo-name: ./${{ matrix.repo }}/repos/core-x86_64
+          repo-name: ./${{ matrix.repo }}/repos/*-x86_64
           arch: loongarch64
           packager: Clansty <i@gao4.pw>
 
@@ -372,6 +372,7 @@ jobs:
       - buildAUR-qemu-aarch64
       - buildAUR-i686
       - buildAUR-loongarch64
+      - build-arch-official-loongarch64
       - pkglist
     steps:
       - uses: actions/checkout@v1
