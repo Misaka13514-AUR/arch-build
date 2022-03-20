@@ -37,6 +37,7 @@ x86_64:
   - etcher-bin
   - finalshell
   - flite1-patched
+  - glib2-static
   - google-chrome
   - guacamole-client
   - guacamole-server
@@ -59,6 +60,7 @@ x86_64:
   - lib32-pciutils
   - lib32-poppler
   - lib32-sane
+  - libffi-static
   - libklvanc-git
   - libldap24
   - librist
@@ -88,6 +90,7 @@ x86_64:
   - openssl-static
   - osu-lazer
   - pam-python
+  - pcre-static
   - pocketsphinx
   - pycharm-professional
   - python-face_recognition
