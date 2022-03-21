@@ -82,6 +82,8 @@ x86_64:
   - mongodb-tools
   - mongodb-tools-bin
   - musikcube
+  - netease-music-tui
+  - netease-music-tui-bin
   - nodejs-http-server
   - noto-color-emoji-fontconfig
   - nvidia-470xx-utils
