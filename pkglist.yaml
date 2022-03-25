@@ -179,7 +179,4 @@ loongarch64-compile:
   # - ./pkgbuilds/universal/code-server # yarn 没有
   - ./pkgbuilds/universal/uwufetch
 
-arch-official-loongarch64:
-  - xmlto
-  - libxslt
-  - libxml2
+arch-official-loongarch64: []
