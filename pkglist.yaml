@@ -86,6 +86,7 @@ x86_64:
   - netease-music-tui
   - netease-music-tui-bin
   - nodejs-http-server
+  - nodestatus-client-go
   - noto-color-emoji-fontconfig
   - nvidia-470xx-utils
   - nvidia-prime-select-git
@@ -154,6 +155,7 @@ i686:
   - frp-bin
   - mongodb-tools
   - netatalk
+  - nodestatus-client-go
   - yay
 
 aarch64-packonly:
@@ -174,6 +176,7 @@ aarch64-packonly:
 aarch64-compile:
   - ./pkgbuilds/universal/code-server
   - ./pkgbuilds/universal/uwufetch
+  - nodestatus-client-go
   - xrdp
 
 loongarch64-packonly: []
