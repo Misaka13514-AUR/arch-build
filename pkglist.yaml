@@ -160,6 +160,7 @@ i686:
 
 aarch64-packonly:
   - alist-bin
+  - clash-premium-bin
   - ddns-go-bin
   - electron-bin
   - electron12-bin
