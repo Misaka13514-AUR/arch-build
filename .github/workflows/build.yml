@@ -395,4 +395,4 @@ jobs:
         run: gzip -9 build-info.json
 
       - name: 上传 JSON 到 Azure Blob 存储
-        run: az storage blob upload --connection-string "${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}" --container-name repo --file build-info.json.gz --name build-info.json.gz --content-cache "no-cache"
+        run: az storage blob upload --connection-string "${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}" --container-name repo --file build-info.json.gz --name build-info.json.gz --overwrite --content-cache "no-cache"
