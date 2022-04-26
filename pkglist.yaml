@@ -151,6 +151,14 @@ i686:
   - clash-premium-bin
   - ddns-go-bin
   - electron-bin
+  - electron17-bin
+  - electron16-bin
+  - electron15-bin
+  - electron14-bin
+  - electron13-bin
+  - electron12-bin
+  - electron11-bin
+  - ffmpeg-compat-58
   - frp
   - frp-bin
   - mongodb-tools
