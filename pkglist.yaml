@@ -100,6 +100,7 @@ x86_64:
   - pycharm-professional
   - python-face_recognition
   - python-face_recognition_models
+  - python-hypyutils
   - qemu-loongarch64
   - rdm-bin
   - realvnc-vnc-server
