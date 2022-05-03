@@ -84,6 +84,7 @@ x86_64:
   - mongodb-tools
   - mongodb-tools-bin
   - musikcube
+  - netease-music-sync
   - netease-music-tui
   - netease-music-tui-bin
   - nodejs-http-server
