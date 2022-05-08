@@ -40,6 +40,7 @@ x86_64:
   - flite1-patched
   - glib2-static
   - google-chrome
+  - gphotos-sync
   - guacamole-client
   - guacamole-server
   - hamradio-menus
