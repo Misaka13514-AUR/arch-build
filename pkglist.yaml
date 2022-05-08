@@ -104,6 +104,7 @@ x86_64:
   - python-face_recognition
   - python-face_recognition_models
   - python-hypyutils
+  - python-plum
   - qemu-loongarch64
   - rdm-bin
   - realvnc-vnc-server
