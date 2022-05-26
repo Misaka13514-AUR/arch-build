@@ -98,6 +98,7 @@ x86_64:
   - osu-lazer
   - pam-python
   - pcre-static
+  - picom-jonaburg-git
   - pocketsphinx
   - pycharm-professional
   - python-exif
