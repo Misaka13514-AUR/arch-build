@@ -20,6 +20,7 @@ x86_64:
   - com.tencent.weixin
   - cosbrowser
   - ctcontainer
+  - curl-http3-msquic
   - cydia-impactor
   - davs2
   - dduper-bin
