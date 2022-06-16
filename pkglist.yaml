@@ -4,6 +4,8 @@ x86_64:
   - ./pkgbuilds/universal/uwufetch
   - alist-bin
   - altserver-bin
+  - apfs-fuse-git
+  - apfsprogs-git
   - aria2-systemd
   - baidunetdisk-electron
   - balena-etcher
@@ -45,6 +47,7 @@ x86_64:
   - guacamole-client
   - guacamole-server
   - hamradio-menus
+  - hfsprogs
   - howdy
   - hyfetch
   - intellij-idea-ultimate-edition
@@ -69,6 +72,7 @@ x86_64:
   - libldap24
   - librist
   - limine
+  - linux-apfs-rw-dkms-git
   - loongarch64-linux-gnu-binutils
   - loongarch64-linux-gnu-linux-api-headers
   - marktext-bin
@@ -114,6 +118,7 @@ x86_64:
   - redis-desktop-manager
   - rider
   - rockchip-mpp
+  - sddm-sugar-candy-git
   - shine
   - slack-electron
   - smallpdf-desktop
@@ -124,6 +129,8 @@ x86_64:
   - texlive-full
   - trustedqsl
   - ttf-all-the-icons
+  - ttf-meslo
+  - ttf-menlo-powerline-git
   - ttf-twemoji
   - ttf-twemoji-color
   - typora-free
