@@ -21,6 +21,7 @@ x86_64:
   - cloudflare-wrangler
   - com.tencent.weixin
   - cosbrowser
+  - crossover
   - ctcontainer
   - curl-http3-msquic
   - cydia-impactor
