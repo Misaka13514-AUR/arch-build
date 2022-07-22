@@ -1,0 +1,7 @@
+name: 获取过时的包
+outputs:
+  pkglist:
+    description: 转换好的 pkglist
+runs:
+  using: 'node12'
+  main: 'index.js'

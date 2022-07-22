@@ -2,7 +2,7 @@ name: BUILD
 
 on:
   schedule:
-    - cron:  '1 */8 * * *'
+    - cron: "1 */8 * * *"
   workflow_dispatch:
 
 jobs:
@@ -16,9 +16,9 @@ jobs:
       - uses: fabasoad/yaml-json-xml-converter-action@main
         id: yaml2json
         with:
-          path: 'pkglist.yaml'
-          from: 'yaml'
-          to: 'json'
+          path: "pkglist.yaml"
+          from: "yaml"
+          to: "json"
       - uses: ./parse-pkglist
         id: parse
         with:
@@ -38,7 +38,7 @@ jobs:
       - name: 检查包是否已存在
         id: is-needed
         uses: ./check-is-needed
-        with: 
+        with:
           package-name: ${{ matrix.repo }}
           arch: ${{ matrix.arch }}
           container: repo
@@ -79,7 +79,7 @@ jobs:
       - name: 提交元信息到 Azure Blob 存储
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         uses: ./
-        with: 
+        with:
           azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
           azure-blob-storage-container: repo
           arch: ${{ steps.is-needed.outputs.arch }}
@@ -99,7 +99,7 @@ jobs:
       - name: 检查包是否已存在
         id: is-needed
         uses: ./check-is-needed
-        with: 
+        with:
           package-name: ${{ matrix.repo }}
           arch: i686
           container: repo
@@ -140,7 +140,7 @@ jobs:
       - name: 提交元信息到 Azure Blob 存储
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         uses: ./
-        with: 
+        with:
           azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
           azure-blob-storage-container: repo
           arch: ${{ steps.is-needed.outputs.arch }}
@@ -160,7 +160,7 @@ jobs:
       - name: 检查包是否已存在
         id: is-needed
         uses: ./check-is-needed
-        with: 
+        with:
           package-name: ${{ matrix.repo }}
           arch: loongarch64
           container: repo
@@ -202,7 +202,7 @@ jobs:
       - name: 提交元信息到 Azure Blob 存储
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         uses: ./
-        with: 
+        with:
           azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
           azure-blob-storage-container: repo
           arch: ${{ steps.is-needed.outputs.arch }}
@@ -227,7 +227,7 @@ jobs:
       - name: 检查包是否已存在
         id: is-needed
         uses: ./check-is-needed
-        with: 
+        with:
           package-name: ./${{ matrix.repo }}/repos/*-x86_64
           arch: loongarch64
           container: repo
@@ -269,7 +269,7 @@ jobs:
       - name: 提交元信息到 Azure Blob 存储
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         uses: ./
-        with: 
+        with:
           azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
           azure-blob-storage-container: repo
           arch: loongarch64
@@ -289,7 +289,7 @@ jobs:
       - name: 检查包是否已存在
         id: is-needed
         uses: ./check-is-needed
-        with: 
+        with:
           package-name: ${{ matrix.repo }}
           arch: aarch64
           container: repo
@@ -358,7 +358,7 @@ jobs:
       - name: 提交元信息到 Azure Blob 存储
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         uses: ./
-        with: 
+        with:
           azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
           azure-blob-storage-container: repo
           arch: ${{ steps.is-needed.outputs.arch }}
@@ -367,7 +367,7 @@ jobs:
   generate-build-info:
     runs-on: ubuntu-latest
     if: always()
-    needs: 
+    needs:
       - buildAUR-pack
       - buildAUR-qemu-aarch64
       - buildAUR-i686
@@ -385,12 +385,29 @@ jobs:
             wget https://archlinux.blob.core.windows.net/repo/$ARCH/files.tar.gz -O files_$ARCH.tar.gz
             tar -xzf files_$ARCH.tar.gz -C pkgdb_$ARCH
           done
-          
+
       - name: 解析包信息
         uses: ./generate-build-info
         with:
           pkglist: ${{ needs.pkglist.outputs.data }}
-      
+
+      - uses: NiceLabs/rclone-action@master
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        with:
+          github-token: ${{ secrets.SECRET_TOKEN }}
+          config: ${{ secrets.RCLONE_CONF }}
+          config-secret-name: RCLONE_CONF
+
+      - run: rclone lsjson 21cn:repo-ng > repo-list.json
+
+      - uses: ./get-outdated-packages
+        id: outdated
+
+      - run: |
+          for i in ${{ steps.outdated.outputs.pkglist }};do
+            rclone delete 21cn:repo-ng/$i
+          done
+
       - name: 压缩 JSON
         run: gzip -9 build-info.json
 
