@@ -113,6 +113,7 @@ x86_64:
   - python-hypyutils
   - python-plum
   - qemu-loongarch64
+  - qemu-system-loongarch64-git
   - rdm-bin
   - realvnc-vnc-server
   - realvnc-vnc-viewer
