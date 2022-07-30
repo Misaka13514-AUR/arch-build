@@ -392,7 +392,6 @@ jobs:
           pkglist: ${{ needs.pkglist.outputs.data }}
 
       - uses: NiceLabs/rclone-action@master
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
           github-token: ${{ secrets.SECRET_TOKEN }}
           config: ${{ secrets.RCLONE_CONF }}
