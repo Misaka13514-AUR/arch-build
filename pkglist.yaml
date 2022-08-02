@@ -107,6 +107,7 @@ x86_64:
   - picom-jonaburg-git
   - pocketsphinx
   - pycharm-professional
+  - python-azure-cli
   - python-exif
   - python-face_recognition
   - python-face_recognition_models
