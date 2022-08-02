@@ -52,7 +52,7 @@ const processArch = (arch) => {
     }
 }
 
-for (arch of ['x86_64', 'i686', 'aarch64', 'loongarch64']) {
+for (arch of ['x86_64', 'i686', 'aarch64', 'loongarch64', 'riscv64']) {
     processArch(arch)
 }
 

@@ -379,7 +379,7 @@ jobs:
 
       - name: 下载仓库数据库
         run: |
-          for ARCH in 'x86_64' 'i686' 'aarch64' 'loongarch64'
+          for ARCH in 'x86_64' 'i686' 'aarch64' 'loongarch64' 'riscv64'
           do
             mkdir pkgdb_$ARCH
             wget https://archlinux.blob.core.windows.net/repo/$ARCH/files.tar.gz -O files_$ARCH.tar.gz
