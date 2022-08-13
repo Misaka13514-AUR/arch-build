@@ -120,6 +120,8 @@ x86_64:
   - python-msrestazure
   - python-plum
   - python-scp
+  - python-types-pyyaml
+  - python-types-requests
   - python-vsts-cd-manager
   - qemu-loongarch64
   - qemu-system-loongarch64-git
@@ -177,6 +179,9 @@ i686:
   - clash-premium-bin
   - ddns-go-bin
   - electron-bin
+  - electron20-bin
+  - electron19-bin
+  - electron18-bin
   - electron17-bin
   - electron16-bin
   - electron15-bin
@@ -197,8 +202,15 @@ aarch64-packonly:
   - clash-premium-bin
   - ddns-go-bin
   - electron-bin
-  - electron12-bin
+  - electron20-bin
+  - electron19-bin
+  - electron18-bin
+  - electron17-bin
+  - electron16-bin
+  - electron15-bin
+  - electron14-bin
   - electron13-bin
+  - electron12-bin
   - jetbrains-gateway
   - mongodb
   - pycharm-professional
