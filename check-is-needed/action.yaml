@@ -31,7 +31,7 @@ runs:
       shell: bash
       run: |
         mkdir pkgdb
-        wget https://repo.atri.tk/${{ inputs.arch }}/atri.files.tar.gz && tar -xzf atri.files.tar.gz -C pkgdb || echo '仓库数据库不存在'
+        wget https://arch-repo.moeneko.workers.dev/${{ inputs.arch }}/atri.files.tar.gz && tar -xzf atri.files.tar.gz -C pkgdb || echo '仓库数据库不存在'
 
     - name: 获取包名称
       shell: bash
