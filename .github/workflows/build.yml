@@ -64,6 +64,16 @@ jobs:
           mkdir rclone-upload
           cp ${{ steps.build.outputs.filelist }} rclone-upload/
 
+      - name: 签名所有包
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        run: |
+          if [ -z "${{ secrets.GPG_PRIVATE_KEY }}" ]; then
+            echo "GPG_PRIVATE_KEY 未设置，跳过签名"
+          else
+            echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
+            find rclone-upload/ -type f -name '*.tar.zst' -print -exec 'gpg --detach-sign {}' \;
+          fi
+
       - uses: NiceLabs/rclone-action@master
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
@@ -74,3 +84,29 @@ jobs:
       - name: 把包使用 rclone 上传
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
+
+  generate-build-info:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - pkglist
+      - buildAUR-pack
+    steps:
+      - uses: NiceLabs/rclone-action@master
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        with:
+          github-token: ${{ secrets.SECRET_TOKEN }}
+          config: ${{ secrets.RCLONE_CONF }}
+          config-secret-name: RCLONE_CONF
+      - name: 提交元信息
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        run: |
+          rclone mount ${{ secrets.REPO_PATH }}/ rclone-repo/
+          docker run --rm -v rclone-upload/:/repo -v "/github/workspace":"/github/workspace" -v /home:/home -v "$PWD":"$PWD" -w "$PWD" archlinux:latest bash -c 'repo-add /repo/atri.db.tar.gz /repo/*.pkg.tar.zst'
+          if [ -z "${{ secrets.GPG_PRIVATE_KEY }}" ]; then
+            echo "GPG_PRIVATE_KEY 未设置，跳过签名"
+          else
+            echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
+            find rclone-upload/ -type f,l -name 'atri*' -name '*.sig' -delete
+            find rclone-upload/ -type f,l -name 'atri*' -print -exec 'gpg --detach-sign {}' \;
+          fi
