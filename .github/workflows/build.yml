@@ -1,8 +1,11 @@
 name: BUILD
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: "1 */8 * * *"
+    - cron: "0 */8 * * *"
   workflow_dispatch:
 
 jobs:
@@ -12,17 +15,17 @@ jobs:
     outputs:
       data: ${{ steps.parse.outputs.pkglist }}
     steps:
-      - uses: actions/checkout@v1
-      - uses: fabasoad/yaml-json-xml-converter-action@main
+      - uses: actions/checkout@v4
+      - uses: fabasoad/data-format-converter-action@main
         id: yaml2json
         with:
-          path: "pkglist.yaml"
+          input: "pkglist.yaml"
           from: "yaml"
           to: "json"
       - uses: ./parse-pkglist
         id: parse
         with:
-          pkglist: ${{ steps.yaml2json.outputs.data }}
+          pkglist: ${{ steps.yaml2json.outputs.output }}
 
   buildAUR-pack:
     runs-on: ubuntu-latest
@@ -33,7 +36,7 @@ jobs:
         include: ${{ fromJSON(needs.pkglist.outputs.data).builds-on-x86_64 }}
       fail-fast: false
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
 
       - name: 检查包是否已存在
         id: is-needed
@@ -41,11 +44,10 @@ jobs:
         with:
           package-name: ${{ matrix.repo }}
           arch: ${{ matrix.arch }}
-          container: repo
 
       - name: 使用 yay 构建包
         id: build
-        uses: Clansty/build-aur-action@main
+        uses: Misaka13514-AUR/build-aur-action@main
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
           repo-name: ${{ matrix.repo }}
@@ -58,357 +60,77 @@ jobs:
           sudo mkdir /github
           sudo ln -s $PWD /github/workspace
 
-      - name: 复制文件以便上传
-        # rclone 没法指定多个文件
+      - name: 上传包
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          mkdir rclone-upload
-          cp ${{ steps.build.outputs.filelist }} rclone-upload/
-
-      - uses: NiceLabs/rclone-action@master
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        uses: actions/upload-artifact@v3
         with:
-          github-token: ${{ secrets.SECRET_TOKEN }}
-          config: ${{ secrets.RCLONE_CONF }}
-          config-secret-name: RCLONE_CONF
+          name: ${{ matrix.repo }}-${{ matrix.arch }}
+          path: ${{ steps.build.outputs.filelist }}
 
-      - name: 把包上传到 OneDrive
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
-
-      - name: 提交元信息到 Azure Blob 存储
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        uses: ./
-        with:
-          azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
-          azure-blob-storage-container: repo
-          arch: ${{ steps.is-needed.outputs.arch }}
-          package-files: ${{ steps.build.outputs.filelist }}
-
-  buildAUR-i686:
+  sync-repo:
     runs-on: ubuntu-latest
-    needs:
-      - pkglist
-    strategy:
-      matrix:
-        repo: ${{ fromJSON(needs.pkglist.outputs.data).builds-on-i686 }}
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: 检查包是否已存在
-        id: is-needed
-        uses: ./check-is-needed
-        with:
-          package-name: ${{ matrix.repo }}
-          arch: i686
-          container: repo
-
-      - name: 使用 Docker 构建包
-        id: build
-        uses: Clansty/build-aur-action32@main
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        with:
-          repo-name: ${{ matrix.repo }}
-          arch: i686
-
-      - name: 同步 docker 内外目录
-        # $PWD 在 docker 中被映射到 /github/workspace
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          sudo mkdir /github
-          sudo ln -s $PWD /github/workspace
-
-      - name: 复制文件以便上传
-        # rclone 没法指定多个文件
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          mkdir rclone-upload
-          cp ${{ steps.build.outputs.filelist }} rclone-upload/
-
-      - uses: NiceLabs/rclone-action@master
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        with:
-          github-token: ${{ secrets.SECRET_TOKEN }}
-          config: ${{ secrets.RCLONE_CONF }}
-          config-secret-name: RCLONE_CONF
-
-      - name: 把包上传到 OneDrive
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
-
-      - name: 提交元信息到 Azure Blob 存储
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        uses: ./
-        with:
-          azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
-          azure-blob-storage-container: repo
-          arch: ${{ steps.is-needed.outputs.arch }}
-          package-files: ${{ steps.build.outputs.filelist }}
-
-  buildAUR-loongarch64:
-    runs-on: ubuntu-latest
-    needs:
-      - pkglist
-    strategy:
-      matrix:
-        repo: ${{ fromJSON(needs.pkglist.outputs.data).builds-on-loongarch64 }}
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: 检查包是否已存在
-        id: is-needed
-        uses: ./check-is-needed
-        with:
-          package-name: ${{ matrix.repo }}
-          arch: loongarch64
-          container: repo
-
-      - name: 构建包
-        id: build
-        uses: Clansty/build-aur-action-loongarch64@main
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        with:
-          repo-name: ${{ matrix.repo }}
-          arch: loongarch64
-          packager: Clansty <i@gao4.pw>
-
-      - name: 同步容器内外目录
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          sudo mkdir /home/builder
-          sudo mount --bind /loongarch64-root/home/builder /home/builder
-          sudo chmod 777 /loongarch64-root/home/builder
-
-      - name: 复制文件以便上传
-        # rclone 没法指定多个文件
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          mkdir rclone-upload
-          cp ${{ steps.build.outputs.filelist }} rclone-upload/
-
-      - uses: NiceLabs/rclone-action@master
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        with:
-          github-token: ${{ secrets.SECRET_TOKEN }}
-          config: ${{ secrets.RCLONE_CONF }}
-          config-secret-name: RCLONE_CONF
-
-      - name: 把包上传到 OneDrive
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
-
-      - name: 提交元信息到 Azure Blob 存储
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        uses: ./
-        with:
-          azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
-          azure-blob-storage-container: repo
-          arch: ${{ steps.is-needed.outputs.arch }}
-          package-files: ${{ steps.build.outputs.filelist }}
-
-  build-arch-official-loongarch64:
-    # 不是 any 的包，自己构建一下
-    runs-on: ubuntu-latest
-    needs:
-      - pkglist
-    strategy:
-      matrix:
-        repo: ${{ fromJSON(needs.pkglist.outputs.data).arch-official-loongarch64 }}
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: clone git 仓库
-        run: |
-          git clone --depth 1 -b packages/${{ matrix.repo }} https://github.com/archlinux/svntogit-packages.git ${{ matrix.repo }}
-
-      - name: 检查包是否已存在
-        id: is-needed
-        uses: ./check-is-needed
-        with:
-          package-name: ./${{ matrix.repo }}/repos/*-x86_64
-          arch: loongarch64
-          container: repo
-
-      - name: 构建包
-        id: build
-        uses: Clansty/build-aur-action-loongarch64@main
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        with:
-          repo-name: ./${{ matrix.repo }}/repos/*-x86_64
-          arch: loongarch64
-          packager: Clansty <i@gao4.pw>
-
-      - name: 同步容器内外目录
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          sudo mkdir /home/builder
-          sudo mount --bind /loongarch64-root/home/builder /home/builder
-          sudo chmod 777 /loongarch64-root/home/builder
-
-      - name: 复制文件以便上传
-        # rclone 没法指定多个文件
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          mkdir rclone-upload
-          cp ${{ steps.build.outputs.filelist }} rclone-upload/
-
-      - uses: NiceLabs/rclone-action@master
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        with:
-          github-token: ${{ secrets.SECRET_TOKEN }}
-          config: ${{ secrets.RCLONE_CONF }}
-          config-secret-name: RCLONE_CONF
-
-      - name: 把包上传到 OneDrive
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
-
-      - name: 提交元信息到 Azure Blob 存储
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        uses: ./
-        with:
-          azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
-          azure-blob-storage-container: repo
-          arch: loongarch64
-          package-files: ${{ steps.build.outputs.filelist }}
-
-  buildAUR-qemu-aarch64:
-    runs-on: ubuntu-latest
-    needs:
-      - pkglist
-    strategy:
-      matrix:
-        repo: ${{ fromJSON(needs.pkglist.outputs.data).builds-on-aarch64 }}
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: 检查包是否已存在
-        id: is-needed
-        uses: ./check-is-needed
-        with:
-          package-name: ${{ matrix.repo }}
-          arch: aarch64
-          container: repo
-
-      - uses: uraimo/run-on-arch-action@v2.1.1
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        id: build
-        name: 使用 docker 构建包
-        with:
-          arch: aarch64
-          distro: archarm_latest
-          githubToken: ${{ github.token }}
-          dockerRunArgs: |
-            --privileged
-            --volume "${PWD}:/github/workspace"
-          install: |
-            ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-            echo '[archlinuxcn]
-            SigLevel = Never
-            Server = https://repo.archlinuxcn.org/aarch64' >> /etc/pacman.conf
-            pacman-key --init
-            pacman -Syu --noconfirm
-            pacman -S --noconfirm base-devel git sudo
-            useradd builder -m
-            echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            echo 'PACKAGER="Clansty <i@gao4.pw>"
-            COMPRESSZST=(zstd -19 -c -z -q --threads=0 -)' > /home/builder/.makepkg.conf
-          run: |
-            cd /github/workspace
-            pacman -Syu --noconfirm
-            if [[ ${{ matrix.repo }} != ./* ]];then
-              git clone https://aur.archlinux.org/${{ matrix.repo }}.git
-            fi # 否则为本地包
-            cd ${{ matrix.repo }}
-            source PKGBUILD
-            chmod -R a+rw .
-            pacman -S --noconfirm --needed --asdeps "${makedepends[@]}" "${depends[@]}"
-            sudo --set-home -u builder makepkg -sfA
-            echo ::set-output name=filelist::$(sudo --set-home -u builder makepkg --packagelist | xargs)
-
-      - name: 同步 docker 内外目录
-        # $PWD 在 docker 中被映射到 /github/workspace
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          sudo mkdir /github
-          sudo ln -s $PWD /github/workspace
-
-      - name: 复制文件以便上传
-        # rclone 没法指定多个文件
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          mkdir rclone-upload
-          cp ${{ steps.build.outputs.filelist }} rclone-upload/
-
-      - uses: NiceLabs/rclone-action@master
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        with:
-          github-token: ${{ secrets.SECRET_TOKEN }}
-          config: ${{ secrets.RCLONE_CONF }}
-          config-secret-name: RCLONE_CONF
-
-      - name: 把包上传到 OneDrive
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
-
-      - name: 提交元信息到 Azure Blob 存储
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        uses: ./
-        with:
-          azure-blob-storage-connection-string: ${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}
-          azure-blob-storage-container: repo
-          arch: ${{ steps.is-needed.outputs.arch }}
-          package-files: ${{ steps.build.outputs.filelist }}
-
-  generate-build-info:
-    runs-on: ubuntu-latest
+    env:
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
     if: always()
     needs:
-      - buildAUR-pack
-      - buildAUR-qemu-aarch64
-      - buildAUR-i686
-      - buildAUR-loongarch64
-      - build-arch-official-loongarch64
       - pkglist
+      - buildAUR-pack
     steps:
-      - uses: actions/checkout@v1
-
-      - name: 下载仓库数据库
-        run: |
-          for ARCH in 'x86_64' 'i686' 'aarch64' 'loongarch64' 'riscv64'
-          do
-            mkdir pkgdb_$ARCH
-            wget https://archlinux.blob.core.windows.net/repo/$ARCH/files.tar.gz -O files_$ARCH.tar.gz
-            tar -xzf files_$ARCH.tar.gz -C pkgdb_$ARCH
-          done
-
-      - name: 解析包信息
-        uses: ./generate-build-info
+      - name: 下载包
+        uses: actions/download-artifact@v3
         with:
-          pkglist: ${{ needs.pkglist.outputs.data }}
+          path: rclone-upload/
+
+      - name: 处理 artifact 结构
+        run: |
+          cd rclone-upload/
+          find . -mindepth 2 -type f -exec mv -t . {} +
+          find . -mindepth 1 -type d -exec rm -rf {} +
+          ls -l
+
+      - name: 计算包数量
+        id: count-pkg
+        run: |
+          echo "::set-output name=count::$(find rclone-upload/ -type f -name '*.tar.zst' | wc -l)"
+
+      - name: 导入 GPG 私钥
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 && env.GPG_PRIVATE_KEY != '' }}
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
+
+      - name: 签名包
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 && env.GPG_PRIVATE_KEY != '' }}
+        run: |
+          find rclone-upload/ -type f -name '*.tar.zst' -print -exec sh -c 'gpg --detach-sign "{}"' \;
+
+      - name: 下载包数据库
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
+        run: |
+          cd rclone-upload/
+          wget https://arch-repo.moeneko.workers.dev/x86_64/atri.db.tar.gz || echo '仓库数据库不存在'
+          wget https://arch-repo.moeneko.workers.dev/x86_64/atri.files.tar.gz || echo '仓库数据库不存在'
+
+      - name: 添加包到数据库
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
+        run: |
+          docker run --rm -v "$PWD/rclone-upload/":"/repo" -v "/github/workspace":"/github/workspace" -v /home:/home -v "$PWD":"$PWD" -w "$PWD" archlinux:latest bash -c 'repo-add /repo/atri.db.tar.gz /repo/*.pkg.tar.zst'
+
+      - name: 签名数据库
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 && env.GPG_PRIVATE_KEY != '' }}
+        run: |
+          find rclone-upload/ -type f,l -name 'atri*' -print -exec sh -c 'gpg --detach-sign "{}"' \;
+
+      - run: ls -l rclone-upload/
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
 
       - uses: NiceLabs/rclone-action@master
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
         with:
           github-token: ${{ secrets.SECRET_TOKEN }}
           config: ${{ secrets.RCLONE_CONF }}
           config-secret-name: RCLONE_CONF
 
-      - run: rclone lsjson 21cn:repo-ng > repo-list.json
-
-      - uses: ./get-outdated-packages
-        id: outdated
-
-      - run: |
-          for i in ${{ steps.outdated.outputs.pkglist }};do
-            rclone delete 21cn:repo-ng/$i
-          done
-
-      - name: 压缩 JSON
-        run: gzip -9 build-info.json
-
-      - name: 上传 JSON 到 Azure Blob 存储
-        run: az storage blob upload --connection-string "${{ secrets.AZURE_BLOB_STORAGE_CONNECTION_STRING }}" --container-name repo --file build-info.json.gz --name build-info.json.gz --overwrite --content-cache "no-cache"
+      - name: 同步到远程仓库
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
+        run: |
+          rclone copy --copy-links rclone-upload/ ${{ secrets.REPO_PATH }}/
