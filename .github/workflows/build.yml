@@ -64,14 +64,14 @@ jobs:
           mkdir rclone-upload
           cp ${{ steps.build.outputs.filelist }} rclone-upload/
 
-      - name: 签名所有包
+      - name: 签名包
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: |
           if [ -z "${{ secrets.GPG_PRIVATE_KEY }}" ]; then
             echo "GPG_PRIVATE_KEY 未设置，跳过签名"
           else
             echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
-            find rclone-upload/ -type f -name '*.tar.zst' -print -exec 'gpg --detach-sign {}' \;
+            find rclone-upload/ -type f -name '*.tar.zst' -print -exec sh -c 'gpg --detach-sign "{}"' \;
           fi
 
       - uses: NiceLabs/rclone-action@master
@@ -85,7 +85,7 @@ jobs:
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
 
-  generate-build-info:
+  generate-database:
     runs-on: ubuntu-latest
     if: always()
     needs:
@@ -98,7 +98,7 @@ jobs:
           github-token: ${{ secrets.SECRET_TOKEN }}
           config: ${{ secrets.RCLONE_CONF }}
           config-secret-name: RCLONE_CONF
-      - name: 提交元信息
+      - name: 提交包数据库
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: |
           rclone mount ${{ secrets.REPO_PATH }}/ rclone-repo/
@@ -108,5 +108,5 @@ jobs:
           else
             echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
             find rclone-upload/ -type f,l -name 'atri*' -name '*.sig' -delete
-            find rclone-upload/ -type f,l -name 'atri*' -print -exec 'gpg --detach-sign {}' \;
+            find rclone-upload/ -type f,l -name 'atri*' -print -exec sh -c 'gpg --detach-sign "{}"' \;
           fi
