@@ -93,15 +93,13 @@ jobs:
       - buildAUR-pack
     steps:
       - uses: NiceLabs/rclone-action@master
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         with:
           github-token: ${{ secrets.SECRET_TOKEN }}
           config: ${{ secrets.RCLONE_CONF }}
           config-secret-name: RCLONE_CONF
       - name: 提交包数据库
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         run: |
-          rclone mount ${{ secrets.REPO_PATH }}/ rclone-repo/
+          rclone mount --daemon ${{ secrets.REPO_PATH }} rclone-upload/
           docker run --rm -v rclone-upload/:/repo -v "/github/workspace":"/github/workspace" -v /home:/home -v "$PWD":"$PWD" -w "$PWD" archlinux:latest bash -c 'repo-add /repo/atri.db.tar.gz /repo/*.pkg.tar.zst'
           if [ -z "${{ secrets.GPG_PRIVATE_KEY }}" ]; then
             echo "GPG_PRIVATE_KEY 未设置，跳过签名"
