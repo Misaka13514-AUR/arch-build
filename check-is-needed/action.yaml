@@ -5,8 +5,6 @@ inputs:
   arch:
     description: 架构
     required: true
-  container:
-    required: true
 outputs:
   is-needed:
     description: true 或者 false 字符串
@@ -33,7 +31,7 @@ runs:
       shell: bash
       run: |
         mkdir pkgdb
-        wget https://archlinux.blob.core.windows.net/${{ inputs.container }}/${{ inputs.arch }}/files.tar.gz && tar -xzf files.tar.gz -C pkgdb || echo '仓库数据库不存在'
+        wget https://repo.atri.tk/${{ inputs.arch }}/files.tar.gz && tar -xzf files.tar.gz -C pkgdb || echo '仓库数据库不存在'
 
     - name: 获取包名称
       shell: bash
