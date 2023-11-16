@@ -78,7 +78,12 @@ jobs:
         with:
           path: rclone-upload/
 
-      - run: ls -l rclone-upload/
+      - name: 处理 artifact 结构
+        run: |
+          cd rclone-upload/
+          find . -mindepth 2 -type f -exec mv -t . {} +
+          find . -mindepth 1 -type d -exec rm -rf {} +
+          ls -l
 
       - name: 计算包数量
         id: count-pkg
@@ -99,8 +104,8 @@ jobs:
         if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
         run: |
           cd rclone-upload/
-          wget -q https://arch-repo.moeneko.workers.dev/x86_64/atri.db{,.tar.gz}
-          wget -q https://arch-repo.moeneko.workers.dev/x86_64/atri.files{,.tar.gz}
+          wget https://arch-repo.moeneko.workers.dev/x86_64/atri.db.tar.gz || echo '仓库数据库不存在'
+          wget https://arch-repo.moeneko.workers.dev/x86_64/atri.files.tar.gz || echo '仓库数据库不存在'
 
       - name: 添加包到数据库
         if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
