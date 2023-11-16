@@ -5,6 +5,9 @@ x86_64:
   - bbg-git
   - code-server
   - code-server-marketplace
+  - cyberchef-web
+  - dirsearch
+  - dnsprobe
   - docsify-cli
   - dump1090-git
   - easyeda-bin
@@ -16,15 +19,20 @@ x86_64:
   - go-cqhttp-bin
   - gqrx-scanner
   - hid-ite8291r3-dkms-git
+  - ibus-mozc
   - iptv-checker
   - jlc-assistant-bin
   - lceda-pro
   - lceda-pro-bin
   - meanalyzer
   - mfoc-hardnested-git
+  - mozc-ut
+  - nixfmt
   - nixpkgs-fmt
   - nuclei
   - nuclei-bin
+  - pkcrack
+  - pngcheck
   - python-crccheck
   - python-frida
   - python-frida-tools
@@ -36,9 +44,14 @@ x86_64:
   - python-rdbtools
   - python-stitching
   - python-wallbreaker
+  - sdrangel-bin
+  - sedutil
   - srmd-ncnn-vulkan
   - subfinder
   - subfinder-bin
+  - ulauncher
+  - wafw00f
+  - whitesur-cursor-theme-git
   - whitesur-icon-theme
 
 i686: []
