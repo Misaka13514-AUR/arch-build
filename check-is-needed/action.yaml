@@ -18,7 +18,7 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v2.3.0
+    - uses: actions/setup-node@v4
 
     - name: 下载 PKGBUILD
       shell: bash

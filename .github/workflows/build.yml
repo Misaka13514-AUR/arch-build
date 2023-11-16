@@ -2,7 +2,7 @@ name: BUILD
 
 on:
   schedule:
-    - cron: "1 */8 * * *"
+    - cron: "0 */8 * * *"
   workflow_dispatch:
 
 jobs:
@@ -12,17 +12,17 @@ jobs:
     outputs:
       data: ${{ steps.parse.outputs.pkglist }}
     steps:
-      - uses: actions/checkout@v1
-      - uses: fabasoad/yaml-json-xml-converter-action@main
+      - uses: actions/checkout@v4
+      - uses: fabasoad/data-format-converter-action@main
         id: yaml2json
         with:
-          path: "pkglist.yaml"
+          input: "pkglist.yaml"
           from: "yaml"
           to: "json"
       - uses: ./parse-pkglist
         id: parse
         with:
-          pkglist: ${{ steps.yaml2json.outputs.data }}
+          pkglist: ${{ steps.yaml2json.outputs.output }}
 
   buildAUR-pack:
     runs-on: ubuntu-latest
@@ -33,7 +33,7 @@ jobs:
         include: ${{ fromJSON(needs.pkglist.outputs.data).builds-on-x86_64 }}
       fail-fast: false
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
 
       - name: 检查包是否已存在
         id: is-needed
@@ -57,54 +57,62 @@ jobs:
           sudo mkdir /github
           sudo ln -s $PWD /github/workspace
 
-      - name: 复制文件以便上传
-        # rclone 没法指定多个文件
+      - name: 上传包
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          mkdir rclone-upload
-          cp ${{ steps.build.outputs.filelist }} rclone-upload/
-
-      - name: 签名包
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: |
-          if [ -z "${{ secrets.GPG_PRIVATE_KEY }}" ]; then
-            echo "GPG_PRIVATE_KEY 未设置，跳过签名"
-          else
-            echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
-            find rclone-upload/ -type f -name '*.tar.zst' -print -exec sh -c 'gpg --detach-sign "{}"' \;
-          fi
-
-      - uses: NiceLabs/rclone-action@master
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        uses: actions/upload-artifact@v3
         with:
-          github-token: ${{ secrets.SECRET_TOKEN }}
-          config: ${{ secrets.RCLONE_CONF }}
-          config-secret-name: RCLONE_CONF
+          name: ${{ matrix.repo }}-${{ matrix.arch }}
+          path: ${{ steps.build.outputs.filelist }}
 
-      - name: 把包使用 rclone 上传
-        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        run: rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
-
-  generate-database:
+  sync-repo:
     runs-on: ubuntu-latest
-    if: always()
+    env:
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+    if: ${{ always() && contains(needs.buildAUR-pack.outputs.*.is-needed, 'true') }}
     needs:
       - pkglist
       - buildAUR-pack
     steps:
+      - name: 下载包
+        uses: actions/download-artifact@v3
+        with:
+          path: rclone-upload/
+
+      - run: ls -l rclone-upload/
+
+      - name: 导入 GPG 私钥
+        if: ${{ env.GPG_PRIVATE_KEY != '' }}
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
+
+      - name: 签名包
+        if: ${{ env.GPG_PRIVATE_KEY != '' }}
+        run: |
+          find rclone-upload/ -type f -name '*.tar.zst' -print -exec sh -c 'gpg --detach-sign "{}"' \;
+
+      - name: 下载包数据库
+        run: |
+          cd rclone-upload/
+          wget -q https://arch-repo.moeneko.workers.dev/x86_64/atri.db{,.tar.gz}
+          wget -q https://arch-repo.moeneko.workers.dev/x86_64/atri.files{,.tar.gz}
+
+      - name: 添加包到数据库
+        run: |
+          docker run --rm -v rclone-upload/:/repo -v "/github/workspace":"/github/workspace" -v /home:/home -v "$PWD":"$PWD" -w "$PWD" archlinux:latest bash -c 'repo-add /repo/atri.db.tar.gz /repo/*.pkg.tar.zst'
+
+      - name: 签名数据库
+        if: ${{ env.GPG_PRIVATE_KEY != '' }}
+        run: |
+          find rclone-upload/ -type f,l -name 'atri*' -print -exec sh -c 'gpg --detach-sign "{}"' \;
+
+      - run: ls -l rclone-upload/
+
       - uses: NiceLabs/rclone-action@master
         with:
           github-token: ${{ secrets.SECRET_TOKEN }}
           config: ${{ secrets.RCLONE_CONF }}
           config-secret-name: RCLONE_CONF
-      - name: 提交包数据库
+
+      - name: 同步到远程仓库
         run: |
-          rclone mount --daemon ${{ secrets.REPO_PATH }} rclone-upload/
-          docker run --rm -v rclone-upload/:/repo -v "/github/workspace":"/github/workspace" -v /home:/home -v "$PWD":"$PWD" -w "$PWD" archlinux:latest bash -c 'repo-add /repo/atri.db.tar.gz /repo/*.pkg.tar.zst'
-          if [ -z "${{ secrets.GPG_PRIVATE_KEY }}" ]; then
-            echo "GPG_PRIVATE_KEY 未设置，跳过签名"
-          else
-            echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
-            find rclone-upload/ -type f,l -name 'atri*' -name '*.sig' -delete
-            find rclone-upload/ -type f,l -name 'atri*' -print -exec sh -c 'gpg --detach-sign "{}"' \;
-          fi
+          rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
