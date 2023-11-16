@@ -110,7 +110,7 @@ jobs:
       - name: 添加包到数据库
         if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
         run: |
-          docker run --rm -v rclone-upload/:/repo -v "/github/workspace":"/github/workspace" -v /home:/home -v "$PWD":"$PWD" -w "$PWD" archlinux:latest bash -c 'repo-add /repo/atri.db.tar.gz /repo/*.pkg.tar.zst'
+          docker run --rm -v "$PWD/rclone-upload/":"/repo" -v "/github/workspace":"/github/workspace" -v /home:/home -v "$PWD":"$PWD" -w "$PWD" archlinux:latest bash -c 'repo-add /repo/atri.db.tar.gz /repo/*.pkg.tar.zst'
 
       - name: 签名数据库
         if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 && env.GPG_PRIVATE_KEY != '' }}
