@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-    if: ${{ always() && contains(needs.buildAUR-pack.outputs.*.is-needed, 'true') }}
+    if: always()
     needs:
       - pkglist
       - buildAUR-pack
@@ -80,39 +80,49 @@ jobs:
 
       - run: ls -l rclone-upload/
 
+      - name: 计算包数量
+        id: count-pkg
+        run: |
+          echo "::set-output name=count::$(find rclone-upload/ -type f -name '*.tar.zst' | wc -l)"
+
       - name: 导入 GPG 私钥
-        if: ${{ env.GPG_PRIVATE_KEY != '' }}
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 && env.GPG_PRIVATE_KEY != '' }}
         run: |
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
 
       - name: 签名包
-        if: ${{ env.GPG_PRIVATE_KEY != '' }}
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 && env.GPG_PRIVATE_KEY != '' }}
         run: |
           find rclone-upload/ -type f -name '*.tar.zst' -print -exec sh -c 'gpg --detach-sign "{}"' \;
 
       - name: 下载包数据库
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
         run: |
           cd rclone-upload/
           wget -q https://arch-repo.moeneko.workers.dev/x86_64/atri.db{,.tar.gz}
           wget -q https://arch-repo.moeneko.workers.dev/x86_64/atri.files{,.tar.gz}
 
       - name: 添加包到数据库
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
         run: |
           docker run --rm -v rclone-upload/:/repo -v "/github/workspace":"/github/workspace" -v /home:/home -v "$PWD":"$PWD" -w "$PWD" archlinux:latest bash -c 'repo-add /repo/atri.db.tar.gz /repo/*.pkg.tar.zst'
 
       - name: 签名数据库
-        if: ${{ env.GPG_PRIVATE_KEY != '' }}
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 && env.GPG_PRIVATE_KEY != '' }}
         run: |
           find rclone-upload/ -type f,l -name 'atri*' -print -exec sh -c 'gpg --detach-sign "{}"' \;
 
       - run: ls -l rclone-upload/
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
 
       - uses: NiceLabs/rclone-action@master
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
         with:
           github-token: ${{ secrets.SECRET_TOKEN }}
           config: ${{ secrets.RCLONE_CONF }}
           config-secret-name: RCLONE_CONF
 
       - name: 同步到远程仓库
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
         run: |
           rclone copy rclone-upload/ ${{ secrets.REPO_PATH }}/
