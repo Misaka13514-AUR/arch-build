@@ -83,6 +83,7 @@ jobs:
 
       - name: 处理 artifact 结构
         run: |
+          mkdir -p rclone-upload/
           cd rclone-upload/
           find . -mindepth 2 -type f -exec mv -t . {} +
           find . -mindepth 1 -type d -exec rm -rf {} +
