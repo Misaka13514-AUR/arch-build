@@ -24,7 +24,7 @@ runs:
       shell: bash
       run: |
         if [[ ${{ inputs.package-name }} != ./* ]];then
-          wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=${{ inputs.package-name }} -O PKGBUILD
+          git clone https://aur.archlinux.org/${{ inputs.package-name }}.git
         fi
 
     - name: 下载并解压仓库数据库
@@ -33,21 +33,25 @@ runs:
         mkdir pkgdb
         wget https://arch-repo.moeneko.workers.dev/${{ inputs.arch }}/atri.files.tar.gz && tar -xzf atri.files.tar.gz -C pkgdb || echo '仓库数据库不存在'
 
+    - name: 更新 VCS 包版本
+      shell: bash
+      run: |
+        cd ${{ inputs.package-name }}
+        if grep -q '^pkgver()' PKGBUILD;then
+          docker run --rm -v $PWD:/pkg -w /pkg --entrypoint /bin/bash ghcr.io/misaka13514-aur/build-aur-action:main -c 'sudo chown -R builder:builder /pkg && sudo --set-home -u builder makepkg -fA --nodeps --nobuild || (sudo --set-home -u builder yay -Syu --noconfirm && source PKGBUILD && for pkg in ${makedepends[@]} ${depends[@]};do sudo --set-home -u builder yay -S --noconfirm --needed --asdeps $pkg; done && sudo --set-home -u builder makepkg -sfA --needed --noconfirm --nobuild)'
+        fi
+
     - name: 获取包名称
       shell: bash
       id: get-name
       run: |
-        if [[ ${{ inputs.package-name }} == ./* ]];then
-          source ${{ inputs.package-name }}/PKGBUILD
-        else
-          source PKGBUILD
-        fi
-        echo ::set-output name=pkgname::$pkgname
-        echo ::set-output name=pkgbase::$pkgbase
-        echo ::set-output name=pkgver::$pkgver
-        echo ::set-output name=pkgrel::$pkgrel
-        echo ::set-output name=epoch::$epoch
-        echo ::set-output name=arch::$arch
+        source ${{ inputs.package-name }}/PKGBUILD
+        echo pkgname=$pkgname >> $GITHUB_OUTPUT
+        echo pkgbase=$pkgbase >> $GITHUB_OUTPUT
+        echo pkgver=$pkgver >> $GITHUB_OUTPUT
+        echo pkgrel=$pkgrel >> $GITHUB_OUTPUT
+        echo epoch=$epoch >> $GITHUB_OUTPUT
+        echo arch=$arch >> $GITHUB_OUTPUT
 
     - name: 检查数据库
       shell: bash

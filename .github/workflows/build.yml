@@ -92,7 +92,7 @@ jobs:
       - name: 计算包数量
         id: count-pkg
         run: |
-          echo "::set-output name=count::$(find rclone-upload/ -type f -name '*.tar.zst' | wc -l)"
+          echo "count=$(find rclone-upload/ -type f -name '*.tar.zst' | wc -l)" >> $GITHUB_OUTPUT
 
       - name: 导入 GPG 私钥
         if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 && env.GPG_PRIVATE_KEY != '' }}
