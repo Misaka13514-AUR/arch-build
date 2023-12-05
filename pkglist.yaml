@@ -39,7 +39,6 @@ x86_64:
   - python-ite8291r3-ctl-git
   - python-largestinteriorrectangle
   - python-lzf
-  - python-pem
   - python-pltable
   - python-rdbtools
   - python-stitching
