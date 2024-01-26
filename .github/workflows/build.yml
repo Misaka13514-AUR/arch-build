@@ -116,12 +116,18 @@ jobs:
         run: |
           docker run --rm -v "$PWD/rclone-upload/":"/repo" -v "/github/workspace":"/github/workspace" -v /home:/home -v "$PWD":"$PWD" -w "$PWD" archlinux:latest bash -c 'repo-add /repo/atri.db.tar.gz /repo/*.pkg.tar.zst'
 
+      - name: 删除旧数据库
+        if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
+        run: |
+          cd rclone-upload/
+          rm -f atri.db.tar.gz.old atri.files.tar.gz.old
+
       - name: 签名数据库
         if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 && env.GPG_PRIVATE_KEY != '' }}
         run: |
           find rclone-upload/ -type f,l -name 'atri*' -print -exec sh -c 'gpg --detach-sign "{}"' \;
 
-      - run: ls -l rclone-upload/
+      - run: ls -lh rclone-upload/
         if: ${{ fromJSON(steps.count-pkg.outputs.count) > 0 }}
 
       - uses: NiceLabs/rclone-action@master

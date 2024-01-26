@@ -1,10 +1,18 @@
 x86_64:
   # 一个 PKGBASE 一行，包含 PKGBASE 中所有的包
   - anime4k
+  - apple-fonts
+  - archlinux-java-run # dep of stm32cubemx
   - bbg
   - bbg-git
+  - burpsuite
+  - ca-certificates-dn42
+  - charles
+  - cloudflarespeedtest
+  - cloudflare-wrangler2
   - code-server
   - code-server-marketplace
+  - cura-bin
   - cyberchef-web
   - dirsearch
   - dnsprobe
@@ -13,45 +21,90 @@ x86_64:
   - easyeda-bin
   - easyeda-pro-bin
   - easyeda-pro-electron
+  - fcitx5-mozc-ut
   - freerouting
   - frida-dexdump
   - fscan
+  - gnome-shell-extension-blur-my-shell
+  - gnome-shell-extension-clipboard-indicator
+  - gnome-shell-extension-dash-to-dock
+  - gnome-shell-extension-gsconnect
+  - gnome-shell-extension-nightthemeswitcher
+  - gnome-shell-extension-no-overview
+  - gnome-shell-extension-system-monitor-next-git
   - go-cqhttp-bin
+  - google-chrome
+  - google-earth-pro
   - gqrx-scanner
+  - hexo-cli
   - hid-ite8291r3-dkms-git
+  - hmcl
+  - howdy
+  - hysteria
   - ibus-mozc
+  - icalingua++
   - iptv-checker
   - jlc-assistant-bin
   - lceda-pro
   - lceda-pro-bin
+  - libnatspec # dep of unzip-natspec
+  - linuxqq-nt-bwrap
   - meanalyzer
+  - mfcuk-git
   - mfoc-hardnested-git
   - mozc-ut
+  - needrestart # dep of pacroller
   - nixfmt
   - nixpkgs-fmt
   - nuclei
   - nuclei-bin
+  - pacroller
+  - pam-python
+  - paru
   - pkcrack
   - pngcheck
+  - python2
   - python-crccheck
   - python-frida
   - python-frida-tools
+  - python-iptvtools
   - python-ite8291r3-ctl-git
   - python-largestinteriorrectangle
   - python-lzf
   - python-pltable
+  - python-pluginbase
   - python-rdbtools
   - python-stitching
   - python-wallbreaker
+  - qsstv
+  - realsr-ncnn-vulkan # optdep of video2x
+  - rockyou
   - sdrangel-bin
+  - seclists
   - sedutil
+  - slack-desktop
+  - snapd-xdg-open-git # dep of linuxqq-nt-bwrap
   - srmd-ncnn-vulkan
+  - stegsolve
+  - stm32cubemx
   - subfinder
   - subfinder-bin
+  # - ttf-mac-fonts
+  - ttf-mplus
+  - ttf-ms-win11
+  - ttf-vlgothic
+  - typora-free
   - ulauncher
+  - unzip-natspec
+  - v2raya-bin
+  - ventoy-bin
+  - video2x
+  - visual-studio-code-bin
   - wafw00f
+  - wemeet-bin
   - whitesur-cursor-theme-git
   - whitesur-icon-theme
+  - yay
 
 i686: []
 
