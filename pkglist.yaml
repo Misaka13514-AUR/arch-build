@@ -75,6 +75,7 @@ x86_64:
   - python-pluginbase
   - python-rdbtools
   - python-stitching
+  - python-toml-sort
   - python-wallbreaker
   - qsstv
   - realsr-ncnn-vulkan # optdep of video2x
