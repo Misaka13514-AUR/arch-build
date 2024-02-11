@@ -60,12 +60,18 @@ jobs:
           sudo mkdir /github
           sudo ln -s $PWD /github/workspace
 
+      - name: 归档包
+        if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
+        run: |
+          cd /github/workspace/${{ matrix.repo }}
+          tar -cvf ~/${{ matrix.repo }}-${{ matrix.arch }}.tar *.tar.zst
+
       - name: 上传包
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.repo }}-${{ matrix.arch }}
-          path: ${{ steps.build.outputs.filelist }}
+          path: ~/${{ matrix.repo }}-${{ matrix.arch }}.tar
 
   sync-repo:
     runs-on: ubuntu-latest
@@ -76,18 +82,37 @@ jobs:
       - pkglist
       - buildAUR-pack
     steps:
+      - name: 创建文件夹
+        run: |
+          mkdir -p rclone-upload
+
       - name: 下载包
         uses: actions/download-artifact@v3
         with:
           path: rclone-upload/
 
-      - name: 处理 artifact 结构
+      - name: 检查文件数量
+        id: count-artifact
         run: |
-          mkdir -p rclone-upload/
+          echo "count=$(ls -1 rclone-upload/ | wc -l)" >> $GITHUB_OUTPUT
+
+      - name: 处理 artifact 结构
+        if: ${{ fromJSON(steps.count-artifact.outputs.count) > 0 }}
+        run: |
           cd rclone-upload/
           find . -mindepth 2 -type f -exec mv -t . {} +
           find . -mindepth 1 -type d -exec rm -rf {} +
-          ls -l
+          ls -lh
+
+      - name: 解档包
+        if: ${{ fromJSON(steps.count-artifact.outputs.count) > 0 }}
+        run: |
+          cd rclone-upload/
+          for file in *.tar; do
+            tar -xf $file
+            rm -f $file
+          done
+          ls -lh
 
       - name: 计算包数量
         id: count-pkg
