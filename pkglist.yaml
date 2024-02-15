@@ -92,7 +92,7 @@ x86_64:
   - subfinder-bin
   # - ttf-mac-fonts
   - ttf-mplus
-  - ttf-ms-win11
+  # - ttf-ms-win11
   - ttf-vlgothic
   - typora-free
   - ulauncher
