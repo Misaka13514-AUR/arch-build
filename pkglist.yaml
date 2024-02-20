@@ -9,7 +9,6 @@ x86_64:
   - ca-certificates-dn42
   - charles
   - cloudflarespeedtest
-  - cloudflare-wrangler2
   - code-server
   - code-server-marketplace
   - cura-bin
