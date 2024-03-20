@@ -34,6 +34,7 @@ x86_64:
   - go-cqhttp-bin
   - google-chrome
   - google-earth-pro
+  - gqrx
   - gqrx-scanner
   - hexo-cli
   - hid-ite8291r3-dkms-git
@@ -86,6 +87,7 @@ x86_64:
   - snapd-xdg-open-git # dep of linuxqq-nt-bwrap
   - srmd-ncnn-vulkan
   - stegsolve
+  - stm32cubeide
   - stm32cubemx
   - subfinder
   - subfinder-bin
@@ -97,6 +99,7 @@ x86_64:
   - ulauncher
   - unzip-natspec
   - v2raya-bin
+  - ventoy
   - ventoy-bin
   - video2x
   - visual-studio-code-bin
