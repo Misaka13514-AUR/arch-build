@@ -17,6 +17,7 @@ x86_64:
   - dnsprobe
   - docsify-cli
   - dump1090-git
+  - eagle
   - easyeda-bin
   - easyeda-pro-bin
   - easyeda-pro-electron
@@ -48,6 +49,7 @@ x86_64:
   - lceda-pro
   - lceda-pro-bin
   - libnatspec # dep of unzip-natspec
+  - linuxqq
   - linuxqq-nt-bwrap
   - meanalyzer
   - mfcuk-git
