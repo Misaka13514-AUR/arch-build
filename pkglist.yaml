@@ -2,6 +2,7 @@ x86_64:
   # 一个 PKGBASE 一行，包含 PKGBASE 中所有的包
   - anime4k
   - apple-fonts
+  - arduino-ide-bin
   - archlinux-java-run # dep of stm32cubemx
   - bbg
   - bbg-git
