@@ -74,12 +74,14 @@ x86_64:
   - python-ite8291r3-ctl-git
   - python-largestinteriorrectangle
   - python-lzf
+  - python-pipreqs
   - python-pltable
   - python-pluginbase
   - python-rdbtools
   - python-stitching
   - python-toml-sort
   - python-wallbreaker
+  - python-yarg
   - qsstv
   - realsr-ncnn-vulkan # optdep of video2x
   - rockyou
