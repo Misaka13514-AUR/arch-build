@@ -2,8 +2,9 @@ x86_64:
   # 一个 PKGBASE 一行，包含 PKGBASE 中所有的包
   - anime4k
   - apple-fonts
-  - arduino-ide-bin
   - archlinux-java-run # dep of stm32cubemx
+  - arduino-ide-bin
+  - arduino-ide-src
   - bbg
   - bbg-git
   - burpsuite
@@ -27,6 +28,7 @@ x86_64:
   - frida-dexdump
   - fscan
   - gnome-shell-extension-blur-my-shell
+  - gnome-shell-extension-blur-my-shell-git
   - gnome-shell-extension-clipboard-indicator
   - gnome-shell-extension-dash-to-dock
   - gnome-shell-extension-gsconnect
