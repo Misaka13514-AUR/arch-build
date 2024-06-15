@@ -3,8 +3,9 @@ x86_64:
   - anime4k
   - apple-fonts
   - archlinux-java-run # dep of stm32cubemx
-  - arduino-ide-bin
-  - arduino-ide-src
+  - arduino1
+  # - arduino-ide-bin # use extra/arduino-ide
+  # - arduino-ide-src
   - bbg
   - bbg-git
   - burpsuite
@@ -70,8 +71,8 @@ x86_64:
   - pngcheck
   - python2
   - python-crccheck
-  - python-frida
-  - python-frida-tools
+  # - python-frida
+  # - python-frida-tools
   - python-iptvtools
   - python-ite8291r3-ctl-git
   - python-largestinteriorrectangle
@@ -80,6 +81,7 @@ x86_64:
   - python-pltable
   - python-pluginbase
   - python-rdbtools
+  - python-sexpdata # dep of turbocase
   - python-stitching
   - python-toml-sort
   - python-wallbreaker
@@ -101,7 +103,8 @@ x86_64:
   # - ttf-mac-fonts
   - ttf-mplus
   # - ttf-ms-win11
-  - ttf-vlgothic
+  # - ttf-vlgothic # moved to [extra]
+  - turbocase
   - typora-free
   - ulauncher
   - unzip-natspec
@@ -111,6 +114,8 @@ x86_64:
   - video2x
   - visual-studio-code-bin
   - wafw00f
+  - wechat-universal-bwrap
+  # - wechat-uos-bwrap # wechat-uos-qt # drop for unfair `replaces`
   - wemeet-bin
   - whitesur-cursor-theme-git
   - whitesur-icon-theme
