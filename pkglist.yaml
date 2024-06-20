@@ -28,6 +28,7 @@ x86_64:
   - freerouting
   - frida-dexdump
   - fscan
+  - geogebra-6-electron
   - gnome-shell-extension-blur-my-shell
   - gnome-shell-extension-blur-my-shell-git
   - gnome-shell-extension-clipboard-indicator
