@@ -93,6 +93,7 @@ x86_64:
   - sdrangel-bin
   - seclists
   - sedutil
+  - serenity
   - slack-desktop
   - snapd-xdg-open-git # dep of linuxqq-nt-bwrap
   - srmd-ncnn-vulkan
