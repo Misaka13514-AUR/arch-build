@@ -1,9 +1,9 @@
 x86_64:
   # 一个 PKGBASE 一行，包含 PKGBASE 中所有的包
-  - anime4k
+  # - anime4k # use extra/mpv-shim-default-shaders
   - apple-fonts
   - archlinux-java-run # dep of stm32cubemx
-  - arduino1
+  - arduino
   # - arduino-ide-bin # use extra/arduino-ide
   # - arduino-ide-src
   - bbg
