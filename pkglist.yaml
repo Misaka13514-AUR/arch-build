@@ -68,10 +68,15 @@ x86_64:
   - pacroller
   - pam-python
   - paru
+  - patool # dep of video2x
   - pkcrack
   - pngcheck
   - python2
+  - python-avalon_framework # dep of video2x
   - python-crccheck
+  - python-dlib # dep of howdy
+  - python-face_recognition # dep of howdy
+  - python-face_recognition_models # dep of howdy
   # - python-frida
   # - python-frida-tools
   - python-iptvtools
