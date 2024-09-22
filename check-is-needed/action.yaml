@@ -45,7 +45,9 @@ runs:
       shell: bash
       id: get-name
       run: |
-        source ${{ inputs.package-name }}/PKGBUILD
+        if ! source "${{ inputs.package-name }}/PKGBUILD" 2>/dev/null; then
+          source <(grep -E '^pkgname=|^pkgbase=|^pkgver=|^pkgrel=|^epoch=|^arch=' "${{ inputs.package-name }}/PKGBUILD")
+        fi
         echo pkgname=$pkgname >> $GITHUB_OUTPUT
         echo pkgbase=$pkgbase >> $GITHUB_OUTPUT
         echo pkgver=$pkgver >> $GITHUB_OUTPUT
