@@ -40,7 +40,7 @@ x86_64:
   - go-cqhttp-bin
   - google-chrome
   - google-earth-pro
-  - gqrx
+  # - gqrx # extra/gqrx
   - gqrx-scanner
   - hexo-cli
   - hid-ite8291r3-dkms-git
@@ -65,6 +65,7 @@ x86_64:
   - nixpkgs-fmt
   - nuclei
   - nuclei-bin
+  - nuclei-templates
   - pacroller
   - pam-python
   - paru
