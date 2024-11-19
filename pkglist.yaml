@@ -85,12 +85,15 @@ x86_64:
   - python-largestinteriorrectangle
   - python-lzf
   - python-pipreqs
-  - python-pltable
+  - python-pltable # dep of meanalyzer
   - python-pluginbase
+  - python-pyautogui
+  - python-pytweening
   - python-rdbtools
   - python-sexpdata # dep of turbocase
   - python-stitching
   - python-toml-sort
+  - python-undetected-chromedriver
   - python-wallbreaker
   - python-yarg
   - qsstv
@@ -104,7 +107,7 @@ x86_64:
   - snapd-xdg-open-git # dep of linuxqq-nt-bwrap
   - srmd-ncnn-vulkan
   - stegsolve
-  - stm32cubeide
+  # - stm32cubeide
   - stm32cubemx
   - subfinder
   - subfinder-bin
