@@ -3,6 +3,7 @@ x86_64:
   # - anime4k # use extra/mpv-shim-default-shaders
   # - arduino-ide-bin # use extra/arduino-ide
   # - arduino-ide-src # use extra/arduino-ide
+  # - meta-rules-dat # optdep of hysteria # use archlinuxcn
   # - gqrx # extra/gqrx
   # - python-frida # not buildable
   # - python-frida-tools # not buildable
@@ -10,6 +11,7 @@ x86_64:
   # - ttf-ms-win11 # manually build
   # - ttf-vlgothic # moved to [extra]
   # - wechat-uos-bwrap # wechat-uos-qt # drop for unfair `replaces`
+  # - v2ray-rules-dat # optdep of hysteria # use archlinuxcn
   - apple-fonts
   - archlinux-java-run # dep of stm32cubemx
   - arduino
@@ -65,7 +67,6 @@ x86_64:
   - linuxqq
   - linuxqq-nt-bwrap
   - meanalyzer
-  - meta-rules-dat # optdep of hysteria
   - mfcuk-git
   - mfoc-hardnested-git
   - mozc-ut
@@ -131,7 +132,6 @@ x86_64:
   - typora-free
   - ulauncher
   - unzip-natspec
-  - v2ray-rules-dat # optdep of hysteria
   - v2raya-bin
   - ventoy
   - ventoy-bin
