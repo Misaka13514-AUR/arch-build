@@ -3,6 +3,7 @@ x86_64:
   # - anime4k # use extra/mpv-shim-default-shaders
   # - arduino-ide-bin # use extra/arduino-ide
   # - arduino-ide-src # use extra/arduino-ide
+  # - easierconnect # manually build
   # - meta-rules-dat # optdep of hysteria # use archlinuxcn
   # - gqrx # extra/gqrx
   # - python-frida # not buildable
@@ -39,7 +40,6 @@ x86_64:
   - fscan
   - geogebra-6-electron
   - gnome-shell-extension-blur-my-shell
-  - gnome-shell-extension-blur-my-shell-git
   - gnome-shell-extension-clipboard-indicator
   - gnome-shell-extension-dash-to-dock
   - gnome-shell-extension-gsconnect
@@ -58,6 +58,7 @@ x86_64:
   - hysteria
   - ibus-mozc
   - icalingua++
+  - imhex
   - iptv-checker
   - jlc-assistant-bin
   - lceda-pro
