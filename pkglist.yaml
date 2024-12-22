@@ -42,6 +42,7 @@ x86_64:
   - google-earth-pro
   # - gqrx # extra/gqrx
   - gqrx-scanner
+  - hath
   - hexo-cli
   - hid-ite8291r3-dkms-git
   - hmcl
