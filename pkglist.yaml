@@ -1,11 +1,18 @@
 x86_64:
   # 一个 PKGBASE 一行，包含 PKGBASE 中所有的包
   # - anime4k # use extra/mpv-shim-default-shaders
+  # - arduino-ide-bin # use extra/arduino-ide
+  # - arduino-ide-src # use extra/arduino-ide
+  # - gqrx # extra/gqrx
+  # - python-frida # not buildable
+  # - python-frida-tools # not buildable
+  # - ttf-mac-fonts # pkgver incorrect
+  # - ttf-ms-win11 # manually build
+  # - ttf-vlgothic # moved to [extra]
+  # - wechat-uos-bwrap # wechat-uos-qt # drop for unfair `replaces`
   - apple-fonts
   - archlinux-java-run # dep of stm32cubemx
   - arduino
-  # - arduino-ide-bin # use extra/arduino-ide
-  # - arduino-ide-src
   - bbg
   - bbg-git
   - burpsuite
@@ -40,7 +47,6 @@ x86_64:
   - go-cqhttp-bin
   - google-chrome
   - google-earth-pro
-  # - gqrx # extra/gqrx
   - gqrx-scanner
   - hath
   - hexo-cli
@@ -55,12 +61,15 @@ x86_64:
   - lceda-pro
   - lceda-pro-bin
   - libnatspec # dep of unzip-natspec
+  - libsdrplay # optdep of sdrangel-bin
   - linuxqq
   - linuxqq-nt-bwrap
   - meanalyzer
+  - meta-rules-dat # optdep of hysteria
   - mfcuk-git
   - mfoc-hardnested-git
   - mozc-ut
+  - ncurses5-compat-libs # dep of stm32cubeide
   - needrestart # dep of pacroller
   - nixfmt
   - nixpkgs-fmt
@@ -73,53 +82,56 @@ x86_64:
   - patool # dep of video2x
   - pkcrack
   - pngcheck
-  - python2
   - python-avalon_framework # dep of video2x
   - python-crccheck
   - python-dlib # dep of howdy
   - python-face_recognition # dep of howdy
   - python-face_recognition_models # dep of howdy
-  # - python-frida
-  # - python-frida-tools
   - python-iptvtools
   - python-ite8291r3-ctl-git
   - python-largestinteriorrectangle
   - python-lzf
+  - python-mouseinfo # dep of python-pyautogui
   - python-pipreqs
   - python-pltable # dep of meanalyzer
   - python-pluginbase
   - python-pyautogui
+  - python-pymsgbox # dep of python-pyautogui
+  - python-pyscreeze # dep of python-pyautogui
   - python-pytweening
   - python-rdbtools
+  - python-selenium # dep of python-undetected-chromedriver
   - python-sexpdata # dep of turbocase
   - python-stitching
   - python-toml-sort
   - python-undetected-chromedriver
   - python-wallbreaker
   - python-yarg
+  - python2
   - qsstv
+  - qt5-gamepad # optdep of sdrangel-bin
   - realsr-ncnn-vulkan # optdep of video2x
   - rockyou
   - sdrangel-bin
   - seclists
   - sedutil
   - serenity
+  - sing-box # optdep of serenity
   - slack-desktop
   - snapd-xdg-open-git # dep of linuxqq-nt-bwrap
   - srmd-ncnn-vulkan
   - stegsolve
-  # - stm32cubeide
+  - stlink-server # dep of stm32cubeide
+  - stm32cubeide
   - stm32cubemx
   - subfinder
   - subfinder-bin
-  # - ttf-mac-fonts
   - ttf-mplus
-  # - ttf-ms-win11
-  # - ttf-vlgothic # moved to [extra]
   - turbocase
   - typora-free
   - ulauncher
   - unzip-natspec
+  - v2ray-rules-dat # optdep of hysteria
   - v2raya-bin
   - ventoy
   - ventoy-bin
@@ -127,7 +139,6 @@ x86_64:
   - visual-studio-code-bin
   - wafw00f
   - wechat-universal-bwrap
-  # - wechat-uos-bwrap # wechat-uos-qt # drop for unfair `replaces`
   - wemeet-bin
   - whitesur-cursor-theme-git
   - whitesur-icon-theme
