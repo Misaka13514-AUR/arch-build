@@ -137,6 +137,7 @@ x86_64:
   - ventoy
   - ventoy-bin
   - video2x
+  - video2x-qt6
   - visual-studio-code-bin
   - wafw00f
   - wechat-universal-bwrap
