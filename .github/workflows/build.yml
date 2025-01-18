@@ -16,7 +16,7 @@ jobs:
       data: ${{ steps.parse.outputs.pkglist }}
     steps:
       - uses: actions/checkout@v4
-      - uses: fabasoad/data-format-converter-action@main
+      - uses: fabasoad/data-format-converter-action@v0.3.0
         id: yaml2json
         with:
           input: "pkglist.yaml"
