@@ -68,7 +68,7 @@ jobs:
 
       - name: 上传包
         if: ${{ steps.is-needed.outputs.is-needed == 'true' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.repo }}-${{ matrix.arch }}
           path: ~/${{ matrix.repo }}-${{ matrix.arch }}.tar
@@ -87,7 +87,7 @@ jobs:
           mkdir -p rclone-upload
 
       - name: 下载包
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: rclone-upload/
 
