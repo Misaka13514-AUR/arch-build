@@ -3,13 +3,9 @@ x86_64:
   # - anime4k # use extra/mpv-shim-default-shaders
   # - arduino-ide-bin # use extra/arduino-ide
   # - arduino-ide-src # use extra/arduino-ide
-  # - easierconnect # manually build
   # - meta-rules-dat # optdep of hysteria # use archlinuxcn
   # - gqrx # extra/gqrx
-  # - python-frida # not buildable
-  # - python-frida-tools # not buildable
   # - ttf-mac-fonts # pkgver incorrect
-  # - ttf-ms-win11 # manually build
   # - ttf-vlgothic # moved to [extra]
   # - wechat-uos-bwrap # wechat-uos-qt # drop for unfair `replaces`
   # - v2ray-rules-dat # optdep of hysteria # use archlinuxcn
@@ -31,6 +27,7 @@ x86_64:
   - docsify-cli
   - dump1090-git
   - eagle
+  # - easierconnect # manually build
   - easyeda-bin
   - easyeda-pro-bin
   - easyeda-pro-electron
@@ -89,6 +86,8 @@ x86_64:
   - python-dlib # dep of howdy
   - python-face_recognition # dep of howdy
   - python-face_recognition_models # dep of howdy
+  - python-frida-bin
+  - python-frida-tools
   - python-iptvtools
   - python-ite8291r3-ctl-git
   - python-largestinteriorrectangle
@@ -129,6 +128,7 @@ x86_64:
   - subfinder
   - subfinder-bin
   - ttf-mplus
+  # - ttf-ms-win11 # manually build
   - turbocase
   - typora-free
   - ulauncher
