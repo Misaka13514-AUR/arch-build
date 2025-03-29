@@ -145,6 +145,7 @@ x86_64:
   - whitesur-cursor-theme-git
   - whitesur-icon-theme
   - yay
+  - yubico-authenticator
 
 i686: []
 
